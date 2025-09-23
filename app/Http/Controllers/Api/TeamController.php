@@ -102,7 +102,7 @@ class TeamController extends Controller
                 'perPage' => ['nullable', 'integer'],
             ]);
             $search = $validator['searchQuery'] ?? '';
-            $orderBy = $validator['orderBy'] ?? 'id';
+            $orderBy = $validator['orderBy'] ?? 'order';
             $direction = $validator['direction'] ?? 'asc';
             $page = $validator['page'] ?? 1;
             $perPage = $validator['perPage'] ?? 10;
