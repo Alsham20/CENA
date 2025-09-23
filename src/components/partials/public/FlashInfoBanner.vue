@@ -46,18 +46,13 @@
 </template>
 
 <script setup lang="ts">
+import type { TArticle } from '@/requests/article';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { RouterLink } from 'vue-router';
 
-interface FlashInfo {
-    id: string
-    imageUrl: string
-    title: string
-    date: string
-}
 const props = defineProps({
     infos: {
-        type: Array<FlashInfo>,
+        type: Array<TArticle>,
         required: true,
     },
 })

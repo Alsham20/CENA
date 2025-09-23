@@ -2,14 +2,16 @@
 <template>
   <div class="overflow-hidden shadow-2xl group border-s-2 border-[#11845a] bg-white pb-3 flex flex-col justify-between h-full">
     <!-- Image -->
-    <img :src="article.imageUrl" :alt="article.title" class="h-48 object-cover" />
+    <img :src="
+        article.image?.base_url + (article.image?.path || '') + '/' + (article.image?.name || '')
+      " alt="" class="h-48 object-cover" />
 
     <!-- Contenu -->
     <div class="flex-1 flex flex-col justify-between mt-4 xl:mt-6 px-4 xl:px-6 space-y-4 xl:space-y-6">
       <!-- Meta -->
       <div class="space-y-2 xl:space-y-4">
         <div class="text-[#11845a] text-xs xl:text-md font-semibold flex">
-          Comptes rendus | {{ formatDate(article.date) }}
+          {{ article.categories?.label }} | {{ formatDate(article.created_at) }}
         </div>
         <h2 class="text-[#2c2c2c] font-medium text-sm xl:text-lg text-wrap mt-2">
           {{ article.title.slice(0, 100) }}
@@ -35,14 +37,15 @@
 </template>
 
 <script setup lang="ts">
+import type { TArticle } from '@/requests/article';
 import type { ArticleType } from '@/types/article';
 
 interface Props {
-    article: ArticleType
+    article: TArticle
 }
 
 interface Emits {
-    read: [article: ArticleType]
+    read: [article: TArticle]
 }
 
 defineProps<Props>()

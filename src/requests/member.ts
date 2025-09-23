@@ -42,7 +42,7 @@ export type TListMembersResponse = z.infer<typeof listMembersResponseSchema>
 
 export const listMembers = async (payload: TListMembersRequest): Promise<TListMembersResponse> => {
   try {
-    const response = await apiClient.get(`/projects/teams`, { params: payload })
+    const response = await apiClient.get(`/teams`, { params: payload })
     if (response.status !== 200) {
       throw new Error('Unable to fetch page. Please try again later.')
     }

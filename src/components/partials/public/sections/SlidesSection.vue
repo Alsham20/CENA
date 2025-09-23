@@ -5,14 +5,14 @@
             class="absolute inset-0 w-full h-full transition-opacity duration-500"
             :class="{ 'opacity-0': currentSlide !== index }">
             <!-- Image d'arrière-plan -->
-            <img :src="slide.imageUrl" :alt="slide.title" class="w-full h-full object-cover" />
+            <img :src="slide.image?.base_url + (slide.image?.path || '') + '/' + (slide.image?.name || '')" alt=""
+                class="w-full h-full object-cover" />
 
             <!-- Contenu -->
-            <div 
+            <div
                 class="absolute inset-0 bg-gray-900 bg-opacity-30 flex items-center justify-center transition-all duration-300">
                 <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white">
-                    <div
-                        class="mx-auto p-4 md:p-8 space-y-4 lg:space-y-6 xl:space-y-10">
+                    <div class="mx-auto p-4 md:p-8 space-y-4 lg:space-y-6 xl:space-y-10">
                         <!-- Tag Actualité -->
                         <div>
                             <span class="xl:text-lg font-extrabold uppercase tracking-wider me-4">
@@ -57,7 +57,8 @@
                                     <button @click="prevSlide"
                                         class="w-6 h-6 md:w-8 md:h-8 xl:w-12 xl:h-12 rounded-full border xl:border-2 border-white flex items-center justify-center text-white hover:bg-white/20 transition-colors"
                                         aria-label="Slide précédent">
-                                        <svg class="w-4 h-4 xl:w-8 xl:h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg class="w-4 h-4 xl:w-8 xl:h-8" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M15 19l-7-7 7-7" />
                                         </svg>
@@ -69,7 +70,8 @@
                                     <button @click="nextSlide"
                                         class="w-6 h-6 md:w-8 md:h-8 xl:w-12 xl:h-12 rounded-full border xl:border-2 border-white flex items-center justify-center text-white hover:bg-white/20 transition-colors"
                                         aria-label="Slide suivant">
-                                        <svg class="w-4 h-4 xl:w-8 xl:h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg class="w-4 h-4 xl:w-8 xl:h-8" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M9 5l7 7-7 7" />
                                         </svg>
@@ -87,14 +89,13 @@
 
 <script setup lang="ts">
 // Le script reste identique à la version précédente
+import { useArticleStore } from '@/stores/article'
 import { faker } from '@faker-js/faker'
-import { ref, onMounted, onUnmounted } from 'vue'
-interface Slide {
-    id: string
-    imageUrl: string
-    title: string
-    created_at: string
-}
+import { ref, onMounted, onUnmounted, computed } from 'vue'
+
+
+const articleStore = useArticleStore()
+const slides = computed(() => articleStore.articles.slice(0,3))
 
 const props = defineProps({
 
@@ -103,27 +104,6 @@ const props = defineProps({
         default: 5000,
     },
 })
-
-const slides: Slide[] = [
-    {
-        id: faker.string.uuid(),
-        title: 'Briefing des équipes de la CENA dans le cadre de la mission de recrutement des Membres de Postes de Vote.',
-        imageUrl: '/assets/img/news/news_2.jpg',
-        created_at: '2025-09-04 21:52:44',
-    },
-    {
-        id: faker.string.uuid(),
-        title: 'Présidentielle 2026 : la CENA lance la délivrance des formulaires de parrainage',
-        imageUrl: '/assets/img/news/news_3.jpg',
-        created_at: '2025-09-02 10:53:46',
-    },
-    {
-        id: faker.string.uuid(),
-        title: 'La Cena échange avec les partis politiques sur le suivi du code électoral et la plateforme e-Delegue',
-        imageUrl: '/assets/img/news/news_1.jpg',
-        created_at: '2025-08-28 14:16:02',
-    }
-];
 
 // Fonction pour extraire la date formatée
 function formatDate(dateStr: string): string {
@@ -152,11 +132,11 @@ const currentSlide = ref(0)
 let autoplayTimer: number | null = null
 
 const nextSlide = () => {
-    currentSlide.value = (currentSlide.value + 1) % slides.length
+    currentSlide.value = (currentSlide.value + 1) % slides.value.length
 }
 
 const prevSlide = () => {
-    currentSlide.value = (currentSlide.value - 1 + slides.length) % slides.length
+    currentSlide.value = (currentSlide.value - 1 + slides.value.length) % slides.value.length
 }
 
 const startAutoplay = () => {
