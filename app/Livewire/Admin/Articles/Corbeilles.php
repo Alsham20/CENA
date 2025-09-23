@@ -1,0 +1,131 @@
+<?php
+
+namespace App\Livewire\Admin\Articles;
+
+use App\Models\Article;
+use App\Models\Category;
+use App\Services\AuditService;
+use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
+use Livewire\Component;
+use Livewire\WithPagination;
+
+class Corbeilles extends Component
+{
+    use WithPagination;
+
+    public $confirm_delete;
+
+    // pagination
+    public $perPage = 10;
+
+    public $search = '';
+
+    public $orderBy = 'id';
+
+    public $orderAsc = false;
+
+    public $category = -1;
+
+    public $categories;
+
+    public $type;
+
+    public $status;
+
+    public function sortBy($name)
+    {
+        if ($this->orderBy == $name) {
+            $this->orderAsc = ! $this->orderAsc;
+        } else {
+            $this->orderAsc = true;
+        }
+        $this->orderBy = $name;
+    }
+
+    public function mount()
+    {
+        $this->authorize('list corbeille');
+        $this->categories = Category::where('type', 'article')->get();
+        AuditService::log('AFFICHAGE DES ARTICLES DE LA CORBEILLE', null, null, 'Liste des articles de la corbeille');
+
+    }
+
+    #[On('deleteArticle')]
+    public function deleteArticle($article_id)
+    {
+        $this->authorize('delete corbeille');
+        try {
+            DB::beginTransaction();
+            $article = Article::find($article_id);
+            if ($article === null) {
+                session()->flash('error', 'Article introuvable');
+
+                return;
+            }
+            $article->delete();
+            // ajouter un audit
+            AuditService::log("SUPPRESSION D'UN ARTICLE", null, null, 'Article supprimé : '.$article->title);
+            DB::commit();
+            $this->confirm_delete = null;
+            $this->dispatch('article-deleted');
+            session()->flash('success', 'Article supprimé avec succès');
+            $this->resetPage();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $this->dispatch('error-deleted');
+            session()->flash('error', 'Erreur lors de la suppression de l\'article');
+            AuditService::logError('Suppression | Erreur lors de la suppression de l\'article | '.$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+        }
+
+    }
+
+    public function restoreArticle($article_id)
+    {
+        $this->authorize('restore corbeille');
+        try {
+            DB::beginTransaction();
+            $article = Article::find($article_id);
+            if ($article === null) {
+                session()->flash('error', 'Article introuvable');
+
+                return;
+            }
+            $article->is_deleted = false;
+            $article->save();
+            // ajouter un audit
+            AuditService::log("RESTAURATION D'UN ARTICLE", null, null, 'Article restauré : '.$article->title);
+            DB::commit();
+            session()->flash('success', 'Article restauré avec succès');
+            $this->resetPage();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            session()->flash('error', 'Erreur lors de la restauration de l\'article');
+            AuditService::logError('Publication | Erreur lors de la restauration de l\'article | '.$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+        }
+    }
+
+    public function render()
+    {
+        if ($this->search == '') {
+            $articles = Article::where('is_deleted', true)->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc');
+        } else {
+            $articles = Article::where('is_deleted', true)->where('title', 'like', '%'.$this->search.'%')->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc');
+        }
+
+        if ($this->type != '') {
+            $articles->where('is_private', (int) $this->type);
+        }
+
+        if ($this->category != -1) {
+            $articles->where('category', (int) $this->category);
+        }
+
+        if ($this->status != '') {
+            $articles->where('is_published', (int) $this->status);
+        }
+        $articles = $articles->paginate($this->perPage);
+
+        return view('livewire.admin.articles.corbeilles', ['articles' => $articles]);
+    }
+}

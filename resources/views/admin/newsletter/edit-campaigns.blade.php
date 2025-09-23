@@ -1,0 +1,6 @@
+@extends('admin.layouts.base')
+@section('content')
+    <div class="content">
+        @livewire('admin.newsletters.edit-campaign-message',['id' => $param])
+    </div>
+@endsection
