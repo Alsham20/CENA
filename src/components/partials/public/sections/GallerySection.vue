@@ -74,7 +74,7 @@ onUnmounted(() => {
     <section class="py-4 md:py-8 space-y-4 md:space-y-6 m-auto w-[90%]">
         <!-- Titre de la section -->
         <div class="flex items-center w-full">
-            <h2 class="text-[#0E6258] text-xl md:text-3xl xl:text-5xl font-extrabold">Galerie photos</h2>
+            <h2 class="text-[#0E6258] text-sm sm:text-xl md:text-3xl xl:text-5xl font-extrabold">Galerie photos</h2>
             <div class="flex-1 border-t border-gray-200 ml-4"></div>
         </div>
 

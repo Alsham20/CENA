@@ -1,8 +1,6 @@
 <!-- ServiceCard.vue -->
 <template>
-    <a :href="service.link" target="_blank" data-aos="flip-left"
-     data-aos-easing="ease-out-cubic"
-     data-aos-duration="2000"
+    <a :href="service.link" target="_blank"
         class="relative block rounded-sm overflow-hidden group transition-transform hover:scale-105 duration-700">
         <!-- Image de fond -->
         <img :src="service.backgroundImage" :alt="service.title" class="absolute inset-0 w-full h-full object-cover" />

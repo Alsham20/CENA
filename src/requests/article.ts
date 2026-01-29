@@ -24,6 +24,15 @@ export const categorySchema = z.object({
   updated_at: z.string().nullable(),
 })
 
+export const activitySchema = z.object({
+  id: z.number(),
+  author: z.number(),
+  label: z.string(),
+  type: z.string(),
+  created_at: z.string().nullable(),
+  updated_at: z.string().nullable(),
+})
+
 export const articleSchema = z.object({
   id: z.number(),
   title: z.string(),
@@ -38,11 +47,12 @@ export const articleSchema = z.object({
   is_published: z.number(),
   is_featured: z.number(),
   is_private: z.number(),
+  activities: activitySchema.nullable(),
   categories: categorySchema.nullable(),
   created_at: z.string(),
   updated_at: z.string().nullable(),
   image: mediaSchema.nullable(),
-  date_article: z.string().nullable(),
+  date_article: z.string(),
 })
 
 export type TArticle = z.infer<typeof articleSchema>
@@ -77,7 +87,7 @@ export const listArticles = async (
       throw new Error('Unable to fetch article. Please try again later.')
     }
     if (!listArticlesResponseSchema.safeParse(response.data).success) {
-      //console.log(listArticlesResponseSchema.safeParse(response.data).error)
+      // console.log(listArticlesResponseSchema.safeParse(response.data).error)
       throw new Error('Unable to parse article. Please try again later.')
     }
     return listArticlesResponseSchema.parse(response.data)

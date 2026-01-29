@@ -1,17 +1,33 @@
-
 <template>
-  <div class="overflow-hidden shadow-2xl group border-s-2 border-[#11845a] bg-white pb-3 flex flex-col justify-between h-full">
+  <div
+    class="relative overflow-hidden shadow-2xl group border-s-2 border-[#11845a] bg-white pb-3 flex flex-col justify-between h-full">
     <!-- Image -->
-    <img :src="
-        article.image?.base_url + (article.image?.path || '') + '/' + (article.image?.name || '')
-      " alt="" class="h-48 object-cover" />
+         <img
+      src="/src/assets/img/images-removebg-preview.png"
+      alt="Loading"
+      class="h-48 object-contain"
+      :class="{ hidden: imageLoaded && !imageError }"
+    />
+
+
+    <img :src="article.image?.base_url + (article.image?.path || '') + '/' + (article.image?.name || '')
+      " alt="" class="h-48 object-cover" 
+            :class="{ hidden: imageError }"
+      @load="onImageLoad()"
+      @error="onImageError()"/>
+    <!-- Badge de catégorie -->
+    <div class="absolute top-3 right-3 px-3 py-1 bg-[#2D3748] text-white text-xs xl:text-lg font-medium rounded">
+      {{ article.categories?.label }}
+    </div>
 
     <!-- Contenu -->
     <div class="flex-1 flex flex-col justify-between mt-4 xl:mt-6 px-4 xl:px-6 space-y-4 xl:space-y-6">
       <!-- Meta -->
       <div class="space-y-2 xl:space-y-4">
-        <div class="text-[#11845a] text-xs xl:text-md font-semibold flex">
-          {{ article.categories?.label }} | {{ formatDate(article.created_at) }}
+        <div class="flex text-sm xl:text-md gap-2">
+          <span class="text-[#11845a] font-semibold">{{ article.activities?.label }}</span>
+          |
+          <span class="text-[#2C2C2C] font-normal"> {{ formatDate(article.created_at) }}</span>
         </div>
         <h2 class="text-[#2c2c2c] font-medium text-sm xl:text-lg text-wrap mt-2">
           {{ article.title.slice(0, 100) }}
@@ -21,10 +37,8 @@
 
       <!-- Bouton en bas -->
       <div class="flex justify-start mt-auto">
-        <button 
-          @click="$emit('read', article)"
-          class="flex items-center bg-[#2D3748] rounded-sm text-white hover:text-white px-4 py-1 text-sm  xl:text-lg font-semibold space-x-1 ease-in duration-300"
-        >
+        <button @click="$emit('read', article)"
+          class="flex items-center bg-[#0E6258] rounded-sm text-white hover:text-white px-4 py-1 text-sm  xl:text-lg font-semibold space-x-1 ease-in duration-300">
           <span class="font-semibold">Lire l'article</span>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-5 h-5">
@@ -38,24 +52,38 @@
 
 <script setup lang="ts">
 import type { TArticle } from '@/requests/article';
-import type { ArticleType } from '@/types/article';
+import { ref } from 'vue';
 
 interface Props {
-    article: TArticle
+  article: TArticle
 }
 
 interface Emits {
-    read: [article: TArticle]
+  read: [article: TArticle]
 }
 
 defineProps<Props>()
 defineEmits<Emits>()
 
+const imageLoaded = ref<boolean>(false)
+
+const imageError = ref<boolean>(false)
+
+const onImageLoad = () => {
+  imageLoaded.value = true
+  imageError.value = false
+}
+
+const onImageError = () => {
+  imageError.value = true
+  imageLoaded.value = false
+}
+
 const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('fr-FR', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-    })
+  return new Date(date).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
 }
 </script>

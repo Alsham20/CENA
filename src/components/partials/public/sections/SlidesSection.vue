@@ -4,9 +4,13 @@
         <div v-for="(slide, index) in slides" :key="index"
             class="absolute inset-0 w-full h-full transition-opacity duration-500"
             :class="{ 'opacity-0': currentSlide !== index }">
+            <!-- Placeholder -->
+            <img src="/src/assets/img/images-removebg-preview.png" alt="Loading" class="absolute inset-0 w-full h-full object-contain"
+                :class="{ hidden: imageLoaded[index] && !imageError[index] }" />
             <!-- Image d'arrière-plan -->
             <img :src="slide.image?.base_url + (slide.image?.path || '') + '/' + (slide.image?.name || '')" alt=""
-                class="w-full h-full object-cover" />
+                class="w-full h-full object-cover" :class="{ hidden: imageError[index] }" @load="onImageLoad(index)"
+                @error="onImageError(index)" />
 
             <!-- Contenu -->
             <div
@@ -15,35 +19,36 @@
                     <div class="mx-auto p-4 md:p-8 space-y-4 lg:space-y-6 xl:space-y-10">
                         <!-- Tag Actualité -->
                         <div>
-                            <span class="xl:text-lg font-extrabold uppercase tracking-wider me-4">
+                            <span class="text-xs sm:text-sm lg:text-lg font-extrabold uppercase tracking-wider me-4">
                                 Actualité
                             </span>
-                            <span class="xl:text-lg font-extrabold uppercase tracking-wider">
+                            <span class="text-xs sm:text-sm lg:text-lg font-extrabold uppercase tracking-wider">
                                 {{ formatDate(slide.created_at) }}
                             </span>
-                            <span class="xl:text-lg font-extrabold uppercase tracking-wider">
+                            <span class="text-xs sm:text-sm lg:text-lg font-extrabold uppercase tracking-wider">
                                 |
                             </span>
-                            <span class="xl:text-lg font-extrabold uppercase tracking-wider">
+                            <span class="text-xs sm:text-sm lg:text-lg font-extrabold uppercase tracking-wider">
                                 {{ formatTime(slide.created_at) }}
                             </span>
                         </div>
 
                         <!-- Titre -->
-                        <h2 class="text-xl md:text-2xl lg:text-4xl xl:text-5xl transition-all duration-500 line-clamp-3 cursor-pointer"
+                        <h2 class="text-sm sm:text-2xl lg:text-4xl xl:text-5xl transition-all duration-500 line-clamp-3 cursor-pointer"
                             :class="{
                                 'translate-y-0 opacity-100': currentSlide === index,
                                 'translate-y-4 opacity-0': currentSlide !== index,
                             }">
                             <span class="font-extrabold leading-tight">
-                                {{ slide.title }}
+                                {{ slide.title.slice(0, 100) }}
+                                {{ slide.title.length > 100 ? '...' : '' }}
                             </span>
                         </h2>
                         <!-- Navigation -->
                         <div class="flex justify-between">
                             <div class="flex justify-start">
-                                <router-link to=""
-                                    class="flex items-center hover:bg-[#EC0001] bg-[#EC0001] rounded-sm text-white hover:text-white px-4 py-1 text-sm xl:text-lg font-semibold space-x-1 ease-in duration-300">
+                                <router-link :to="'/articles/' + slide.slug"
+                                    class="flex items-center hover:bg-[#EC0001] bg-[#EC0001] rounded-sm text-white hover:text-white px-2 lg:px-4 py-1 text-xs xl:text-lg font-semibold space-x-1 ease-in duration-300">
                                     <span class="font-bold uppercase ">Lire la suite</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -90,12 +95,10 @@
 <script setup lang="ts">
 // Le script reste identique à la version précédente
 import { useArticleStore } from '@/stores/article'
-import { faker } from '@faker-js/faker'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 
-
 const articleStore = useArticleStore()
-const slides = computed(() => articleStore.articles.slice(0,3))
+const slides = computed(() => articleStore.articles.slice(0, 3))
 
 const props = defineProps({
 
@@ -104,6 +107,22 @@ const props = defineProps({
         default: 5000,
     },
 })
+
+// États pour suivre le chargement et les erreurs des images
+const imageLoaded = ref<boolean[]>(new Array(slides.value.length).fill(false))
+const imageError = ref<boolean[]>(new Array(slides.value.length).fill(false))
+
+const onImageLoad = (index: number) => {
+    imageLoaded.value[index] = true
+    imageError.value[index] = false
+}
+
+const onImageError = (index: number) => {
+    imageError.value[index] = true
+    imageLoaded.value[index] = false
+    // Optionnel : logger l'erreur ou notifier un service de monitoring
+    console.warn(`Failed to load image for slide ${index}`)
+}
 
 // Fonction pour extraire la date formatée
 function formatDate(dateStr: string): string {

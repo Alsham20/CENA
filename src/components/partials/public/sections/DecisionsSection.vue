@@ -3,16 +3,15 @@
     <section class="py-4 md:py-8 space-y-4 md:space-y-6 m-auto w-[90%]">
         <!-- Titre de la section -->
         <div class="mb-8 flex items-center w-full">
-            <h2 class="text-[#0E6258] text-xl md:text-3xl xl:text-5xl font-extrabold">Décisions récentes</h2>
+            <h2 class="text-[#0E6258] text-sm sm:text-xl md:text-3xl xl:text-5xl font-extrabold">Décisions récentes</h2>
             <div class="flex-1 border-t border-gray-300 ml-4"></div>
         </div>
-
         <!-- Container du carrousel -->
         <div data-aos="fade-up-left" class="overflow-hidden mb-8">
             <div class="flex transition-transform duration-500 ease-in-out"
                 :style="{ transform: `translateX(-${currentIndex * slideWidth}%)` }">
-                <div v-for="(decision, index) in decisions" :key="decision.id" :class="cardClasses">
-                    <DecisionCard :decision="decision" @read="handleRead" @download="handleDownload" />
+                <div v-for="(document, index) in documents" :key="document.id" :class="cardClasses">
+                    <DecisionCard :document="document" @read="handleRead" @download="handleDownload" />
                 </div>
             </div>
         </div>
@@ -43,8 +42,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import DecisionCard from '../cards/DecisionCard.vue'
-import { decisions } from '@/data'
-import type { DecisionType } from '@/types/decision'
+import { useDocumentStore } from '@/stores/document'
+import type { IDocument } from '@/requests/document'
 
 // État réactif
 const currentIndex = ref(0)
@@ -61,7 +60,7 @@ const cardsPerView = computed(() => {
 })
 
 const slideWidth = computed(() => 100 / cardsPerView.value)
-const maxIndex = computed(() => Math.max(0, decisions.length - cardsPerView.value))
+const maxIndex = computed(() => Math.max(0, documents.value.length - cardsPerView.value))
 const totalPages = computed(() => maxIndex.value + 1)
 
 const cardClasses = computed(() => [
@@ -69,6 +68,16 @@ const cardClasses = computed(() => [
     cardsPerView.value === 1 ? 'w-full px-2' :
         cardsPerView.value === 2 ? 'w-1/2 px-2' : 'w-1/3 px-2'
 ])
+
+const documentStore = useDocumentStore()
+const documents = computed(() => documentStore.documents)
+
+onMounted(() => {
+      documentStore.fetchDocuments({
+        page: 1,
+        pageSize: 10,
+      })
+})
 
 // Navigation functions
 const goToPrevious = (): void => {
@@ -137,13 +146,13 @@ const handleNext = (): void => {
     restartAutoSlide()
 }
 
-const handleRead = (decision: DecisionType): void => {
-    console.log('Lire la décision:', decision.number)
+const handleRead = (document: IDocument): void => {
+    console.log('Lire la décision:', document.name)
     // Votre logique ici
 }
 
-const handleDownload = (decision: DecisionType): void => {
-    console.log('Télécharger la décision:', decision.number)
+const handleDownload = (document: IDocument): void => {
+    console.log('Télécharger la décision:', document.name)
     // Votre logique ici
 }
 

@@ -45,7 +45,7 @@ onMounted(() => {
 <template>
     <section class="py-4 md:py-8 m-auto w-[90%] space-y-4 md:space-y-10">
         <div class="flex justify-between items-center">
-            <h1 class="text-[#0E6258] text-xl md:text-3xl xl:text-5xl font-extrabold">Le Conseil Electoral </h1>
+            <h1 class="text-[#0E6258] text-sm sm:text-xl md:text-3xl xl:text-5xl font-extrabold">Le Conseil Electoral </h1>
             <!-- <div class="flex items-center space-x-2 text-center">
                 <span class="text-blue-900 md:text-lg font-medium invisible md:visible">Tout le conseil</span>
                 <router-link to="/membres" class="p-2 rounded-full bg-blue-900 hover:bg-blue-700 text-white">
