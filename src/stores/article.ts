@@ -41,7 +41,6 @@ export const useArticleStore = defineStore('articleStore', {
 
       try {
         const response: TListArticlesResponse = await listArticles(request)
-
         this.articles = response.data
         this.pagination = {
           page: response.current_page,

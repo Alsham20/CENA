@@ -1,9 +1,9 @@
 <template>
     <div class="bg-white mx-auto w-full max-w-full shadow-md overflow-hidden">
-        <div class="flex items-center h-16 xl:h-24"> <!-- hauteur fixée ici -->
+        <div class="flex items-center h-12 lg:h-16 xl:h-24"> <!-- hauteur fixée ici -->
             <!-- Étiquette Flash Info -->
             <div class="bg-[#EC0001] h-full px-4 py-2 flex-shrink-0 relative z-10 text-white mr-4 flex items-center">
-                <span class="font-bold xl:text-lg uppercase">FLASH INFO</span>
+                <span class="font-bold text-[10px] sm:text-xs lg:text-sm xl:text-lg uppercase">FLASH INFO</span>
 
                 <!-- Forme triangulaire -->
                 <div
@@ -12,20 +12,20 @@
 
             </div>
 
-            <div class="flash-info-content-wrapper ml-4">
+            <div class="flash-info-content-wrapper ml-2 lg:ml-4">
                 <transition name="slide">
                     <div :key="currentMessageIndex" class="flash-info-content">
-                        <RouterLink to="#"
-                            class="text-gray-700 text-sm xl:text-lg font-normal italic hover:text-[#EC0001]">{{
+                        <RouterLink :to="'/articles/' + infos[currentMessageIndex].slug"
+                            class="text-gray-700 text-[10px] sm:text-xs lg:text-sm xl:text-lg font-normal italic hover:text-[#EC0001]">{{
                                 infos[currentMessageIndex].title }}</RouterLink>
                     </div>
                 </transition>
             </div>
             <!-- Boutons de navigation -->
-            <div class="flex items-center space-x-2 px-4">
+            <!-- <div class="flex items-center lg:space-x-2 px-2 lg:px-4">
                 <button @click="prevMessage" class="p-1 rounded-full hover:bg-gray-200 transition-colors"
                     :disabled="isTransitioning" :class="{ 'opacity-50 cursor-not-allowed': isTransitioning }">
-                    <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="w-4 lg:w-6 h-4 lg:h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd"
                             d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
                             clip-rule="evenodd" />
@@ -34,30 +34,25 @@
                 <button @click="nextMessage" class="p-1 rounded-full hover:bg-gray-200 transition-colors"
                     :disabled="isTransitioning" :class="{ 'opacity-50 cursor-not-allowed': isTransitioning }">
 
-                    <svg class=" w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class=" w-4 lg:w-6 h-4 lg:h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd"
                             d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                             clip-rule="evenodd" />
                     </svg>
                 </button>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import type { TArticle } from '@/requests/article';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { RouterLink } from 'vue-router';
 
-interface FlashInfo {
-    id: string
-    imageUrl: string
-    title: string
-    date: string
-}
 const props = defineProps({
     infos: {
-        type: Array<FlashInfo>,
+        type: Array<TArticle>,
         required: true,
     },
 })
@@ -106,7 +101,7 @@ onUnmounted(() => {
     @apply flex-grow overflow-hidden relative flex items-center;
     /* Added flex and items-center here */
     min-height: 2.8em;
-    line-height: 1.4em;
+    line-height: .7em;
 }
 
 .flash-info-content {

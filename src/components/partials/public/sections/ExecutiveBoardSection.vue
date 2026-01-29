@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import MemberCard from '../cards/MemberCard.vue';
-import { members } from '@/data';
+import { useMemberStore } from '@/stores/member';
+import type { TMember } from '@/requests/member';
+
+const memberStore = useMemberStore();
+const members = computed(() => memberStore.members)
 
 // État pour le modal de biographie
 const isModalOpen = ref(false)
-const selectedMember = ref<Member | null>(null)
+const selectedMember = ref<TMember | null>(null)
 
 // Gestion des événements
-const handleViewBiography = (member: Member) => {
+const handleViewBiography = (member: TMember) => {
     selectedMember.value = member
     isModalOpen.value = true
     document.body.style.overflow = 'hidden'
@@ -21,19 +25,27 @@ const closeModal = () => {
 }
 
 const handleSocialLink = (url: string, platform: string) => {
-    
+
 }
 
 const handleViewAll = () => {
     // Logique pour voir tous les membres
     console.log('Voir tout le bureau')
 }
+
+onMounted(() => {
+    memberStore.listMembers({
+        page: 1,
+        pageSize: 10,
+    })
+})
+
 </script>
 
 <template>
     <section class="py-4 md:py-8 m-auto w-[90%] space-y-4 md:space-y-10">
         <div class="flex justify-between items-center">
-            <h1 class="text-[#0E6258] text-xl md:text-3xl xl:text-5xl font-extrabold">Le Conseil Electoral </h1>
+            <h1 class="text-[#0E6258] text-sm sm:text-xl md:text-3xl xl:text-5xl font-extrabold">Le Conseil Electoral </h1>
             <!-- <div class="flex items-center space-x-2 text-center">
                 <span class="text-blue-900 md:text-lg font-medium invisible md:visible">Tout le conseil</span>
                 <router-link to="/membres" class="p-2 rounded-full bg-blue-900 hover:bg-blue-700 text-white">
@@ -68,14 +80,14 @@ const handleViewAll = () => {
                     <!-- En-tête du modal -->
                     <div class="flex justify-between items-start mb-6">
                         <div class="flex items-center gap-4">
-                            <img :src="selectedMember.avatarUrl"
-                                :alt="`${selectedMember.firstName} ${selectedMember.lastName}`"
+                            <img :src="selectedMember.media?.base_url + (selectedMember.media?.path || '') + '/' + (selectedMember.media?.name || '')"
+                                :alt="`${selectedMember.firstname} ${selectedMember.lastname}`"
                                 class="w-16 h-16 rounded-lg object-cover" />
                             <div>
                                 <h3 class="text-xl font-bold text-blue-900">
-                                    {{ selectedMember.firstName }} {{ selectedMember.lastName }}
+                                    {{ selectedMember.firstname }} {{ selectedMember.lastname }}
                                 </h3>
-                                <p class="text-gray-600">{{ selectedMember.position }}</p>
+                                <p class="text-gray-600">{{ selectedMember.fonction }}</p>
                             </div>
                         </div>
 
@@ -91,7 +103,7 @@ const handleViewAll = () => {
                     <!-- Contenu de la biographie -->
                     <div class="prose max-w-none">
                         <p class="text-gray-700 leading-relaxed">
-                            Biographie de {{ selectedMember.firstName }} {{ selectedMember.lastName }}...
+                            Biographie de {{ selectedMember.firstname }} {{ selectedMember.lastname }}...
                         </p>
                         <p class="text-gray-700 leading-relaxed mt-4">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
@@ -106,7 +118,7 @@ const handleViewAll = () => {
                     </div>
 
                     <!-- Réseaux sociaux dans le modal -->
-                    <div v-if="selectedMember.socialLinks" class="mt-6 pt-4 border-t">
+                    <!-- <div v-if="selectedMember.socialLinks" class="mt-6 pt-4 border-t">
                         <p class="text-sm font-medium text-gray-600 mb-3">Suivez-nous :</p>
                         <div class="flex gap-3">
                             <button v-if="selectedMember.socialLinks.facebook"
@@ -136,7 +148,7 @@ const handleViewAll = () => {
                                 </svg>
                             </button>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </Teleport>

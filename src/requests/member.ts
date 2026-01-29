@@ -21,6 +21,9 @@ export const memberSchema = z.object({
   lastname: z.string(),
   title: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
+  facebook_link: z.string().nullable(),
+  tweeter_link: z.string().nullable(),
+  linkedin_link: z.string().nullable(),
   created_at: z.string(),
   updated_at: z.string().nullable(),
   media: mediaSchema.nullable(),
@@ -42,7 +45,7 @@ export type TListMembersResponse = z.infer<typeof listMembersResponseSchema>
 
 export const listMembers = async (payload: TListMembersRequest): Promise<TListMembersResponse> => {
   try {
-    const response = await apiClient.get(`/projects/teams`, { params: payload })
+    const response = await apiClient.get(`/teams`, { params: payload })
     if (response.status !== 200) {
       throw new Error('Unable to fetch page. Please try again later.')
     }

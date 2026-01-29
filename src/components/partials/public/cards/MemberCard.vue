@@ -1,14 +1,16 @@
 <script setup lang="ts">
+import type { TMember } from '@/requests/member';
+
 
 
 interface Props {
-  member: Member
+  member: TMember
 }
 
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
-  viewBiography: [member: Member]
+  viewBiography: [member: TMember]
   openSocialLink: [url: string, platform: string]
 }>()
 
@@ -22,13 +24,13 @@ const handleSocialClick = (url: string, platform: string) => {
 </script>
 
 <template>
-  <div data-aos="zoom-in" class="relative bg-white rounded-lg shadow-lg overflow-visible pt-20 pb-6 px-6 border-b-4 border-[#11845a] flex flex-col justify-between h-full">
+  <div class="relative bg-white rounded-lg shadow-lg overflow-visible pt-20 pb-6 px-6 border-b-4 border-[#11845a] flex flex-col justify-between h-full">
     <!-- Image du membre - positionnée pour dépasser de la carte -->
     <div class="absolute -top-16 left-1/2 transform -translate-x-1/2">
       <div class="w-64 h-48 rounded-lg overflow-hidden shadow-lg bg-gray-100">
         <img 
-          :src="member.avatarUrl" 
-          :alt="`${member.firstName} ${member.lastName}`"
+          :src="member.media?.base_url + (member.media?.path || '') + '/' + (member.media?.name || '')" 
+          alt=""
           class="w-full h-full object-cover"
         />
       </div>
@@ -39,12 +41,12 @@ const handleSocialClick = (url: string, platform: string) => {
       <div>
         <!-- Nom et prénom -->
         <h3 class="text-xl xl:text-3xl font-bold text-[#0E6258] mb-2 line-clamp-2">
-          {{ member.firstName }} {{ member.lastName }}
+          {{ member.firstname }} {{ member.lastname }}
         </h3>
         
         <!-- Fonction -->
         <p class="text-gray-900 font-semibold text-sm xl:text-lg mb-6">
-          {{ member.position }}
+          {{ member.fonction }}
         </p>
       </div>
 
@@ -62,8 +64,8 @@ const handleSocialClick = (url: string, platform: string) => {
         <div class="flex gap-2">
           <!-- Facebook -->
           <button 
-            v-if="member.socialLinks?.facebook"
-            @click="handleSocialClick(member.socialLinks.facebook, 'facebook')"
+             v-if="member.facebook_link"
+            @click="handleSocialClick(member.facebook_link, 'facebook')"
             class="w-7 h-7 xl:w-12 xl:h-12 bg-[#3B5998] text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
           >
             <svg class="w-4 h-4 xl:w-6 xl:h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -73,8 +75,8 @@ const handleSocialClick = (url: string, platform: string) => {
           
           <!-- Twitter -->
           <button 
-            v-if="member.socialLinks?.twitter"
-            @click="handleSocialClick(member.socialLinks.twitter, 'twitter')"
+            v-if="member.tweeter_link"
+            @click="handleSocialClick(member.tweeter_link, 'twitter')"
             class="w-7 h-7 xl:w-12 xl:h-12 bg-[#1DA1F2] text-white rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors"
           >
             <svg class="w-4 h-4 xl:w-6 xl:h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -84,8 +86,8 @@ const handleSocialClick = (url: string, platform: string) => {
           
           <!-- LinkedIn -->
           <button 
-            v-if="member.socialLinks?.linkedin"
-            @click="handleSocialClick(member.socialLinks.linkedin, 'linkedin')"
+            v-if="member.linkedin_link"
+            @click="handleSocialClick(member.linkedin_link, 'linkedin')"
             class="w-7 h-7 xl:w-12 xl:h-12 bg-[#0077B5] text-white rounded-full flex items-center justify-center hover:bg-blue-800 transition-colors"
           >
             <svg class="w-4 h-4 xl:w-6 xl:h-6" fill="currentColor" viewBox="0 0 24 24">
