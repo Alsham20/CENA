@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Ne pas rediriger les accès directs au dossier storage/app/public
+    RewriteCond %{REQUEST_URI} ^/storage/app/public
+    RewriteRule .* - [L]
+
+    # Rediriger tout le reste vers public/
+    RewriteRule ^$ public/ [L]
+    RewriteRule (.*) public/$1 [L]
+</IfModule>

@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AuditsController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ActiviteController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ElectionController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\MediaController;
@@ -13,14 +14,21 @@ use App\Http\Controllers\Admin\MenuEmplacementController;
 use App\Http\Controllers\Admin\NewsletterController;
 use App\Http\Controllers\Admin\PagesController;
 use App\Http\Controllers\Admin\RessourceUtileController;
+use App\Http\Controllers\Admin\ResultatController;
 use App\Http\Controllers\Admin\RolesPermissionsController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\VideoController;
 use App\Http\Controllers\Auth\AuthController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['guest'])->group(function () {
+
+    Route::get('/symlink', function () {
+        Artisan::call('storage:link');
+    });
 
     Route::get('/login', [AuthController::class, 'login'])->name('app_login');
     Route::post('/login', [AuthController::class, 'authenticate']);
@@ -65,6 +73,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', [ArticlesController::class, 'create'])->name('create');
         Route::get('/{article}', [ArticlesController::class, 'show'])->name('show');
         Route::get('/{article}/edit', [ArticlesController::class, 'edit'])->name('edit');
+    });
+
+    // videos
+    Route::prefix('videos')->name('videos.')->group(function () {
+        Route::get('/', [VideoController::class, 'index'])->name('index');
+        Route::get('/create', [VideoController::class, 'create'])->name('create');
+        Route::get('/{video}', [VideoController::class, 'show'])->name('show');
+        Route::get('/{video}/edit', [VideoController::class, 'edit'])->name('edit');
     });
 
     // pages
@@ -115,12 +131,28 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{event}/edit', [EventController::class, 'edit'])->name('edit');
     });
 
-    //activites
-    Route::prefix('activites')->name('activites.')->group(function () {
+        //composantes
+    Route::prefix('elections')->name('elections.')->group(function () {
+        Route::get('/', [ElectionController::class,'index'])->name('index');
+        Route::get('/create', [ElectionController::class,'create'])->name('create');
+        Route::get('/{election}', [ElectionController::class,'show'])->name('show');
+        Route::get('/{election}/edit', [ElectionController::class,'edit'])->name('edit');
+    });
+
+    //composantes activites
+    Route::prefix('resultats')->name('resultats.')->group(function () {
+        Route::get('/', [ResultatController::class,'index'])->name('index');
+        Route::get('/create', [ResultatController::class,'create'])->name('create');
+        Route::get('/{resultat}', [ResultatController::class,'show'])->name('show');
+        Route::get('/{resultat}/edit', [ResultatController::class,'edit'])->name('edit');
+    });
+
+    //activities
+    Route::prefix('activities')->name('activities.')->group(function () {
         Route::get('/', [ActiviteController::class, 'index'])->name('index');
         Route::get('/create', [ActiviteController::class, 'create'])->name('create');
-        Route::get('/{activite}', [ActiviteController::class, 'show'])->name('show');
-        Route::get('/{activite}/edit', [ActiviteController::class, 'edit'])->name('edit');
+        Route::get('/{activity}', [ActiviteController::class, 'show'])->name('show');
+        Route::get('/{activity}/edit', [ActiviteController::class, 'edit'])->name('edit');
     });
 
     // Documentation

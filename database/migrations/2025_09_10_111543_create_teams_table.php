@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('fonction')->nullable();
             $table->integer('order')->default(0);
             $table->string('description')->nullable();
+            $table->string('facebook_link')->nullable();
+            $table->string('tweeter_link')->nullable();
+            $table->string('linkedin_link')->nullable();
             $table->boolean('is_private')->default(false);
             $table->unsignedBigInteger('avatar')->nullable();
             $table->foreign('avatar')->references('id')->on('media')->nullOnDelete();

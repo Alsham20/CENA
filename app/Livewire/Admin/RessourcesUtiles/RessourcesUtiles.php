@@ -43,7 +43,7 @@ class RessourcesUtiles extends Component
     {
         $this->authorize('list documentation');
         $this->categories = Category::where('type', 'Documentation')->get();
-        AuditService::log('AFFICHAGE DES Documentation', null, null, 'Liste des documentation');
+        AuditService::log('AFFICHAGE DES DOCUMENTS', null, null, 'Liste des documents');
     }
 
     public function render()
@@ -56,6 +56,7 @@ class RessourcesUtiles extends Component
             foreach ($terms as $term) {
                 $query->where(function ($q) use ($term) {
                     $q->where('name', 'LIKE', "%{$term}%")
+                        ->orWhere('object', 'LIKE', "%{$term}%")
                         ->orWhere('doc_type', 'LIKE', "%{$term}%")
                         ->orWhere('doc_size', 'LIKE', "%{$term}%")
                         ->orWhere('description', 'LIKE', "%{$term}%")
@@ -66,7 +67,7 @@ class RessourcesUtiles extends Component
         }
 
         if ($this->categorie != '') {
-            $ressources->where('categorie_id', $this->categorie);
+            $ressources->where('category', $this->categorie);
         }
         $ressources = $ressources->paginate($this->perPage);
 
@@ -87,7 +88,7 @@ class RessourcesUtiles extends Component
             }
             $ressource->delete();
             // ajouter un audit
-            AuditService::log("SUPPRESSION D'UNE RESSOURCE UTILE", null, null, 'Ressource utile supprime : '.$ressource->name);
+            AuditService::log("SUPPRESSION D'UNE RESSOURCE UTILE", null, null, 'Ressource utile supprime : ' . $ressource->name);
             DB::commit();
             $this->confirm_delete = null;
             $this->dispatch('ressource-deleted');
@@ -97,7 +98,7 @@ class RessourcesUtiles extends Component
             DB::rollBack();
             $this->dispatch('error-deleted');
             session()->flash('error', 'Erreur lors de la suppression des ressources');
-            AuditService::logError('Suppression | Erreur lors de la suppression de la ressource | '.$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+            AuditService::logError('Suppression | Erreur lors de la suppression de la ressource | ' . $th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
         }
     }
 }

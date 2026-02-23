@@ -4,17 +4,21 @@ namespace App\Livewire\Admin\RessourcesUtiles;
 
 use App\Models\Category;
 use App\Models\RessourcesUtile;
+use App\Models\RessourcesUtils;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class Show extends Component
 {
     public $name;
 
+    public $object;
+
     public $description;
 
     public $doc_id;
 
-    public $categorie_id;
+    public $category;
 
     public $doc_type;
 
@@ -26,25 +30,29 @@ class Show extends Component
 
     public $categories = [];
 
+    public $date_creation;
+
     public $ressourceUtile;
 
     public function mount($id)
     {
         $this->authorize('view documentation');
         $this->categories = Category::where('type', 'Documentation')->get();
-        $ressourceUtile = RessourcesUtile::where('id', $id)->first();
+        $ressourceUtile = RessourcesUtils::where('id', $id)->first();
 
         if ($ressourceUtile == null) {
             abort(404);
         }
         $this->ressourceUtile = $ressourceUtile;
         $this->name = $ressourceUtile->name;
+        $this->object = $ressourceUtile->object;
         $this->description = $ressourceUtile->description;
-        $this->categorie_id = $ressourceUtile->categorie_id;
+        $this->category = $ressourceUtile->category;
         $this->doc_id = $ressourceUtile->doc_id;
         $this->doc_type = $ressourceUtile->doc_type;
         $this->doc_size = $ressourceUtile->doc_size;
         $this->doc_path = $ressourceUtile->doc_path;
+        $this->date_creation = ($ressourceUtile->date_creation)  ? Carbon::parse($ressourceUtile->date_creation)->format('Y-m-d') : '';
     }
 
     public function render()

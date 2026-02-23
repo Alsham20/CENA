@@ -20,68 +20,112 @@ class CategorySeeder extends Seeder
             ],
             [
                 'author' => 1,
-                'label' => 'Agriculture',
+                'label' => 'Réglementation',
+                'type' => 'Documentation',
+            ],
+            [
+                'author' => 1,
+                'label' => 'Résultats',
+                'type' => 'Documentation',
+            ],
+            [
+                'author' => 1,
+                'label' => 'Calendrier électoral',
+                'type' => 'Documentation',
+            ],
+
+
+            [
+                'author' => 1,
+                'label' => 'Élections',
                 'type' => 'Article',
             ],
             [
                 'author' => 1,
-                'label' => 'Industrie et commerce',
+                'label' => 'Partis politiques',
                 'type' => 'Article',
             ],
             [
                 'author' => 1,
-                'label' => 'Éducation',
+                'label' => 'Financement public',
                 'type' => 'Article',
             ],
             [
                 'author' => 1,
-                'label' => 'Numerique',
+                'label' => 'Institutions',
+                'type' => 'Article',
+            ],
+            [
+                'author' => 1,
+                'label' => 'Code électoral',
+                'type' => 'Article',
+            ],
+
+
+            [
+                'author' => 1,
+                'label' => 'Élections',
                 'type' => 'Video',
             ],
             [
                 'author' => 1,
-                'label' => 'Education',
+                'label' => 'Partis politiques',
                 'type' => 'Video',
             ],
             [
                 'author' => 1,
-                'label' => 'Infrastructures et Transports',
+                'label' => 'Financement public',
                 'type' => 'Video',
             ],
             [
                 'author' => 1,
-                'label' => 'Santé',
+                'label' => 'Institutions',
                 'type' => 'Video',
             ],
             [
                 'author' => 1,
-                'label' => 'Finance',
+                'label' => 'Code électoral',
                 'type' => 'Video',
             ],
+
+
             [
                 'author' => 1,
-                'label' => 'Tourisme',
-                'type' => 'Video',
-            ],
-            [
-                'author' => 1,
-                'label' => 'Art et culture',
+                'label' => 'Formation & Sensibilisation',
                 'type' => 'Event',
             ],
             [
                 'author' => 1,
-                'label' => 'Musique',
+                'label' => 'Élections',
                 'type' => 'Event',
             ],
             [
                 'author' => 1,
-                'label' => 'Sport',
+                'label' => 'Coopération',
                 'type' => 'Event',
             ],
+
+
             [
                 'author' => 1,
                 'label' => 'page',
                 'type' => 'Page',
+            ],
+
+            [
+                'author' => 1,
+                'label' => 'Présidentielle',
+                'type' => 'Election',
+            ],
+            [
+                'author' => 1,
+                'label' => 'Législative',
+                'type' => 'Election',
+            ],
+            [
+                'author' => 1,
+                'label' => 'Communale',
+                'type' => 'Election',
             ],
 
         ]);

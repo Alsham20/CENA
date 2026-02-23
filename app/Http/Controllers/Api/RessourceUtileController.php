@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\RessourcesUtils;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class RessourceUtileController extends Controller
@@ -124,20 +126,20 @@ class RessourceUtileController extends Controller
 
             $ressourcesUtiles = RessourcesUtils::when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', '%'.$search.'%')
-                        ->orWhere('description', 'like', '%'.$search.'%')
-                        ->orWhere('doc_type', 'like', '%'.$search.'%');
+                    $q->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('object', 'like', '%' . $search . '%')
+                        ->orWhere('description', 'like', '%' . $search . '%')
+                        ->orWhere('doc_type', 'like', '%' . $search . '%');
                 });
-            })->whereHas('categorie', function ($query) {
-                $query->whereIn('label', ['Avis', 'Décision']);
             });
 
             if ($category) {
-                $ressourcesUtiles = $ressourcesUtiles->whereHas('categorie', function ($query) use ($category) {
+                $ressourcesUtiles = $ressourcesUtiles->whereHas('categories', function ($query) use ($category) {
                     $query->where('label', $category);
                 });
             }
-            $ressourcesUtiles = $ressourcesUtiles->with('categorie')
+
+            $ressourcesUtiles = $ressourcesUtiles->with('categories')
                 ->orderBy($orderBy, $direction)
                 ->paginate($perPage, ['*'], 'page', $page);
 
@@ -254,20 +256,34 @@ class RessourceUtileController extends Controller
 
             $ressourcesUtiles = RessourcesUtils::when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', '%'.$search.'%')
-                        ->orWhere('description', 'like', '%'.$search.'%')
-                        ->orWhere('doc_type', 'like', '%'.$search.'%');
+                    $q->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('object', 'like', '%' . $search . '%')
+                        ->orWhere('description', 'like', '%' . $search . '%')
+                        ->orWhere('doc_type', 'like', '%' . $search . '%');
                 });
-            })->whereHas('categorie', function ($query) {
-                $query->whereNotIn('label', ['Avis', 'Décision']);
             });
 
-            if ($category) {
-                $ressourcesUtiles = $ressourcesUtiles->whereHas('categorie', function ($query) use ($category) {
-                    $query->where('label', $category);
+            $cat = Category::where(['type' => 'Documentation', 'label' => 'Décision'])->first();
+
+            $ressourcesUtiles = RessourcesUtils::query()
+                ->whereHas('categories', function ($query) use ($cat) {
+                    $query->where('type', 'Documentation')
+                        ->where('parent', $cat->id);
+                })
+                ->when($search, function ($query, $search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%")
+                            ->orWhere('description', 'like', "%{$search}%")
+                            ->orWhere('doc_type', 'like', "%{$search}%");
+                    });
                 });
-            }
-            $ressourcesUtiles = $ressourcesUtiles->with('categorie')
+
+            // if ($category) {
+            //     $ressourcesUtiles = $ressourcesUtiles->whereHas('categories', function ($query) use ($category) {
+            //         $query->where('label', $category);
+            //     });
+            // }
+            $ressourcesUtiles = $ressourcesUtiles->with('categories')
                 ->orderBy($orderBy, $direction)
                 ->paginate($perPage, ['*'], 'page', $page);
 
@@ -383,9 +399,9 @@ class RessourceUtileController extends Controller
 
             $ressourcesUtiles = RessourcesUtils::when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', '%'.$search.'%')
-                        ->orWhere('description', 'like', '%'.$search.'%')
-                        ->orWhere('doc_type', 'like', '%'.$search.'%');
+                    $q->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('description', 'like', '%' . $search . '%')
+                        ->orWhere('doc_type', 'like', '%' . $search . '%');
                 });
             })->where('categorie_id', $request->categorieId)->with('categorie')
                 ->orderBy($orderBy, $direction)
@@ -398,6 +414,136 @@ class RessourceUtileController extends Controller
         }
     }
 
+    public function getDecisions(Request $request)
+    {
+        try {
+            $validator = $request->validate([
+                'search' => ['nullable', 'string'],
+                'orderBy' => ['nullable', 'string'],
+                'orderDirection' => ['nullable', 'string'],
+                'page' => ['nullable', 'integer'],
+                'pageSize' => ['nullable', 'integer'],
+                'category' => ['nullable', 'string'],
+                'number' => ['nullable', 'string'],
+                'requester' => ['nullable', 'string'],
+                'from' => ['nullable', 'date'],
+                'to' => ['nullable', 'date'],
+
+            ]);
+            $search = $validator['searchQuery'] ?? '';
+            $orderBy = $validator['orderBy'] ?? 'id';
+            $direction = $validator['orderDirection'] ?? 'asc';
+            $page = $validator['page'] ?? 1;
+            $perPage = $validator['pageSize'] ?? 10;
+            $category = $validator['category'] ?? null;
+            $number = $validator['number'] ?? null;
+            $requester = $validator['requester'] ?? null;
+            $from = $validator['from'] ?? null;
+            $to = $validator['to'] ?? null;
+
+            $cat = Category::where(['type' => 'Documentation', 'label' => 'Décision'])->first();
+
+            $decisions = RessourcesUtils::query()
+                ->whereHas('categories', function ($query) use ($cat) {
+                    $query->where('type', 'Documentation')
+                        ->where('parent', $cat->id);
+                })
+                ->when($search, function ($query, $search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%")
+                            ->orWhere('description', 'like', "%{$search}%")
+                            ->orWhere('doc_type', 'like', "%{$search}%");
+                    });
+                });
+
+            if ($number) {
+                $decisions = $decisions->where('name', 'like', "%{$number}%");
+            }
+
+            if ($requester) {
+                $decisions = $decisions->where('requester', 'like', "%{$requester}%");
+            }
+
+            if ($from) {
+                $decisions = $decisions->whereDate('date_creation', '>=', $from);
+            }
+
+            if ($to) {
+                $decisions = $decisions->whereDate('date_creation', '<=', $to);
+            }
+
+            if ($category && $category != 'Tous les types') {
+                $decisions = $decisions->whereHas('categories', function ($query) use ($category) {
+                    $query->where('label', $category);
+                });
+            }
+
+            $decisions = $decisions->with(['categories'])
+                ->orderBy($orderBy, $direction)
+                ->paginate($perPage, ['*'], 'page', $page);
+
+            return response()->json($decisions);
+        } catch (ValidationException $th) {
+
+            return response()->json(['error' => $th->errors()], 400);
+        }
+    }
+
+
+    public function getLois(Request $request)
+    {
+        try {
+            $validator = $request->validate([
+                'search' => ['nullable', 'string'],
+                'orderBy' => ['nullable', 'string'],
+                'orderDirection' => ['nullable', 'string'],
+                'page' => ['nullable', 'integer'],
+                'pageSize' => ['nullable', 'integer'],
+                'from' => ['nullable', 'date'],
+                'to' => ['nullable', 'date'],
+
+            ]);
+            $search = $validator['searchQuery'] ?? '';
+            $orderBy = $validator['orderBy'] ?? 'id';
+            $direction = $validator['orderDirection'] ?? 'asc';
+            $page = $validator['page'] ?? 1;
+            $perPage = $validator['pageSize'] ?? 10;
+            $from = $validator['from'] ?? null;
+            $to = $validator['to'] ?? null;
+
+
+
+            $lois = RessourcesUtils::query()
+                ->whereHas('categories', function ($query) {
+                    $query->where('type', 'Documentation')
+                        ->where('label', 'Textes et lois');
+                })
+                ->when($search, function ($query, $search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%")
+                            ->orWhere('description', 'like', "%{$search}%")
+                            ->orWhere('doc_type', 'like', "%{$search}%");
+                    });
+                });
+
+            if ($from) {
+                $lois = $lois->whereDate('date_creation', '>=', $from);
+            }
+
+            if ($to) {
+                $lois = $lois->whereDate('date_creation', '<=', $to);
+            }
+
+            $lois = $lois->with(['categories'])
+                ->orderBy($orderBy, $direction)
+                ->paginate($perPage, ['*'], 'page', $page);
+
+            return response()->json($lois);
+        } catch (ValidationException $th) {
+
+            return response()->json(['error' => $th->errors()], 400);
+        }
+    }
     /**
      * Store a newly created resource in storage.
      */

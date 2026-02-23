@@ -20,6 +20,8 @@ return new class extends Migration
             $table->dateTime('date_article')->nullable();
             $table->unsignedBigInteger('category')->nullable();
             $table->foreign('category')->references('id')->on('categories')->nullOnDelete();
+            $table->unsignedBigInteger('activity')->nullable();
+            $table->foreign('activity')->references('id')->on('activities')->nullOnDelete();
             $table->unsignedBigInteger('poster')->nullable();
             $table->foreign('poster')->references('id')->on('media')->nullOnDelete();
             $table->text('resume')->nullable();

@@ -23,7 +23,7 @@
                     <div class="row mb-2">
                         @can('create faqs')
                             <div class="col-sm-5">
-                                <a href="{{route('faqs.create')}}" class="btn btn-danger mb-2"><i
+                                <a href="{{route('faqs.create')}}" class="btn btn-success mb-2"><i
                                         class="mdi mdi-plus-circle me-2"></i> Ajouter un faq</a>
                             </div>
                         @endcan

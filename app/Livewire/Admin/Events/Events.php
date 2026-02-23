@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Events;
 
 use App\Mail\EventCreated;
+use App\Models\Category;
 use App\Models\Event;
 use App\Models\User;
 use App\Services\AuditService;
@@ -25,6 +26,12 @@ class Events extends Component
 
     public $orderAsc = false;
 
+    public $category = -1;
+
+    public $categories;
+
+    public $type;
+
     public $confirm_delete;
 
     public $status;
@@ -42,6 +49,7 @@ class Events extends Component
     public function mount()
     {
         $this->authorize('list events');
+        $this->categories = Category::where('type', 'Event')->get();
         AuditService::log('AFFICHAGE DES EVENEMENTS', null, null, 'Liste des évènements');
     }
 
@@ -59,7 +67,7 @@ class Events extends Component
             }
             $event->delete();
             // ajouter un audit
-            AuditService::log("SUPPRESSION D'UN EVENEMENT", null, null, 'Evènement supprime : '.$event->name);
+            AuditService::log("SUPPRESSION D'UN EVENEMENT", null, null, 'Evènement supprime : ' . $event->name);
             DB::commit();
             $this->confirm_delete = null;
             $this->dispatch('event-deleted');
@@ -69,9 +77,8 @@ class Events extends Component
             DB::rollBack();
             $this->dispatch('event-error');
             session()->flash('error', 'Erreur lors de la suppression des évènements');
-            AuditService::logError('Suppression | Erreur lors de la suppression de l\'évènement | '.$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+            AuditService::logError('Suppression | Erreur lors de la suppression de l\'évènement | ' . $th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
         }
-
     }
 
     public function render()
@@ -91,6 +98,10 @@ class Events extends Component
                 });
             }
             $events = $query->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc');
+        }
+
+        if ($this->category != -1) {
+            $events->where('category', (int) $this->category);
         }
 
         if ($this->status != '') {
@@ -117,18 +128,18 @@ class Events extends Component
             $article->save();
             // envoyer un mail de notification
             $users = User::permission('receive event notifications')->get();
-            foreach ($users as $user) {
-                Mail::to($user->email)->send(new EventCreated($article));
-            }
+            // foreach ($users as $user) {
+            //     Mail::to($user->email)->send(new EventCreated($article));
+            // }
             // ajouter un audit
-            AuditService::log("PUBLICATION D'UN EVENEMENT", null, null, 'Article publie : '.$article->id);
+            AuditService::log("PUBLICATION D'UN EVENEMENT", null, null, 'Article publie : ' . $article->id);
             DB::commit();
             $this->dispatch('notification', ['icon' => 'success', 'title' => 'Publication', 'message' => 'Evènement publie avec succès']);
             $this->resetPage();
         } catch (\Throwable $th) {
             DB::rollBack();
             $this->dispatch('notification', ['icon' => 'error', 'title' => 'Erreur', 'message' => 'Une erreur est survenue.']);
-            AuditService::logError('Publication | Erreur lors de la publication de l\'evènement | '.$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+            AuditService::logError('Publication | Erreur lors de la publication de l\'evènement | ' . $th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
         }
     }
 
@@ -146,14 +157,14 @@ class Events extends Component
             $article->is_published = false;
             $article->save();
             // ajouter un audit
-            AuditService::log("DESACTIVATION D'UN EVENEMENT", null, null, 'Evènement desactive : '.$article->id);
+            AuditService::log("DESACTIVATION D'UN EVENEMENT", null, null, 'Evènement desactive : ' . $article->id);
             DB::commit();
             $this->dispatch('notification', ['icon' => 'success', 'title' => 'Desactivation', 'message' => 'Evènement desactive avec succès']);
             $this->resetPage();
         } catch (\Throwable $th) {
             DB::rollBack();
             $this->dispatch('notification', ['icon' => 'error', 'title' => 'Erreur', 'message' => 'Une erreur est survenue.']);
-            AuditService::logError('Desactivation | Erreur lors de la desactivation de l\'evènement | '.$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+            AuditService::logError('Desactivation | Erreur lors de la desactivation de l\'evènement | ' . $th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
         }
     }
 }

@@ -23,7 +23,7 @@
                     <div class="row mb-2">
                         @can('create roles')
                             <div class="col-sm-5">
-                                <a href="{{route('roles.create')}}" class="btn btn-danger mb-2"><i class="mdi mdi-plus-circle me-2"></i> Ajouter un role</a>
+                                <a href="{{route('roles.create')}}" class="btn btn-success mb-2"><i class="mdi mdi-plus-circle me-2"></i> Ajouter un role</a>
                             </div>
                         @endcan
                         <!-- end col-->

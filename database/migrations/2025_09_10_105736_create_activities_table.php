@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
+            $table->string('label');
+            $table->enum('type', ['FAQ', 'Page', 'Documentation', 'Article', 'Video', 'Event', 'Abonne']);
+            $table->unsignedBigInteger('author');
+            $table->foreign('author')->references('id')->on('users');
             $table->timestamps();
         });
     }

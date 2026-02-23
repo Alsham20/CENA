@@ -42,7 +42,7 @@
                         <div class="col-lg-2">
                             <div class="mb-3">
                                 <select wire:model.live="perPage" wire:change="resetPage" class="form-select"
-                                        id="example-select">
+                                    id="example-select">
                                     <option value="5">5</option>
                                     <option value="10">10</option>
                                     <option value="20">20</option>
@@ -51,14 +51,28 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-2">
                             <div class="mb-3" wire:ignore>
                                 <select wire:model.live="category" wire:change="resetPage"
-                                        class="select2 form-control category" data-toggle="select2"
-                                        data-placeholder="Choisir ...">
+                                    class="select2 form-control category" data-toggle="select2"
+                                    data-placeholder="Choisir ...">
                                     <option value="-1">--Catégories--</option>
                                     @foreach ($categories as $item)
-                                        <option value="{{$item->id}}">{{$item->label}}</option>
+                                    <option value="{{$item->id}}">{{$item->label}}</option>
+                                    @endforeach
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <div class="mb-3" wire:ignore>
+                                <select wire:model.live="activity" wire:change="resetPage"
+                                    class="select2 form-control activity" data-toggle="select2"
+                                    data-placeholder="Choisir ...">
+                                    <option value="-1">--Activités--</option>
+                                    @foreach ($activities as $item)
+                                    <option value="{{$item->id}}">{{$item->label}}</option>
                                     @endforeach
 
                                 </select>
@@ -77,22 +91,22 @@
                             </div>
                         </div>--}}
 
-                        <div class="col-lg-2">
+                        <!-- <div class="col-lg-2">
                             <div class="mb-3">
                                 <select wire:model.live="type" wire:change="resetPage" class="form-select"
-                                        id="example-select">
+                                    id="example-select">
                                     <option value="">--Types--</option>
                                     <option value="0">Public</option>
                                     <option value="1">Privé</option>
 
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="col-lg-2">
                             <div class="mb-3">
                                 <select wire:model.live="status" wire:change="resetPage" class="form-select"
-                                        id="example-select">
+                                    id="example-select">
                                     <option value="">--Statut--</option>
                                     <option value="0">Non publié</option>
                                     <option value="1">Publié</option>
@@ -100,10 +114,10 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-3">
+                        <div class="col-lg-4">
                             <div class="input-group float-end">
                                 <input type="text" wire:model.live="search" wire:keyup="resetPage" class="form-control"
-                                       placeholder="Rechercher...">
+                                    placeholder="Rechercher...">
 
                             </div>
                         </div>

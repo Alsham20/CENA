@@ -12,6 +12,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\On;
 use App\Models\Media;
+use App\Models\RessourcesUtils;
 
 class Add extends Component
 {
@@ -19,11 +20,13 @@ class Add extends Component
 
     public $name;
 
+    public $object;
+
     public $description;
 
     public $doc_id;
 
-    public $categorie_id;
+    public $category;
 
     public $doc_type;
 
@@ -85,8 +88,10 @@ class Add extends Component
         $this->author = auth()->user()->id;
         $validated = $this->validate([
             'name' => 'required|string',
+            'object' => 'required|string',
+            'description' => 'nullable|string',
             'date_creation' => 'nullable|date',
-            'categorie_id' => 'required|exists:categories,id',
+            'category' => 'required|exists:categories,id',
             'attached_file_' => 'required|file|mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,bmp,png,zip,rar,xls,xlsx|max:1024000',
         ]);
 
@@ -101,9 +106,9 @@ class Add extends Component
             $validated['doc_type'] = $fileupload['type'];
             $validated['doc_size'] = round($fileupload['size'] / 1024, 2);
             $validated['doc_id'] = Str::uuid();
-            $ressourceUtile = RessourcesUtile::create($validated);
+            $ressourceUtile = RessourcesUtils::create($validated);
 
-            $this->reset(['name', 'attached_file_', 'doc_path', 'categorie_id']);
+            $this->reset(['name', 'object', 'description', 'attached_file_', 'doc_path', 'category']);
             $this->dispatch('resetEditors');
             $this->dispatch('notification', ['icon' => 'success', 'title' => 'Enregistrement', 'message' => 'Documentation créée avec succès.']);
             AuditService::log("CREATION D'UNE DOCUMENTATION", null, json_encode($ressourceUtile->toArray()), 'Creation de la documentation '.$ressourceUtile->name);

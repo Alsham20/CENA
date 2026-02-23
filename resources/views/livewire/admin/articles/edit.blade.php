@@ -1,4 +1,3 @@
-
 <div class="container-fluid">
 
 
@@ -10,10 +9,10 @@
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Dashboard</a></li>
                         <li class="breadcrumb-item"><a href="{{route('articles.index')}}">Articles</a></li>
-                        <li class="breadcrumb-item active">Ajouter</li>
+                        <li class="breadcrumb-item active">Modifier</li>
                     </ol>
                 </div>
-                <h4 class="page-title">Ajouter un article</h4>
+                <h4 class="page-title">Modifier un article</h4>
             </div>
         </div>
     </div>
@@ -28,24 +27,24 @@
                         <div class="row">
                             <div class="col-md-12">
                                 @if (session('success'))
-                                    <div class="alert alert-success" role="alert">
-                                        {{ session('success') }}
-                                    </div>
+                                <div class="alert alert-success" role="alert">
+                                    {{ session('success') }}
+                                </div>
                                 @endif
                                 @if (session('error'))
-                                    <div class="alert alert-danger" role="alert">
-                                        {{ session('error') }}
-                                    </div>
+                                <div class="alert alert-danger" role="alert">
+                                    {{ session('error') }}
+                                </div>
                                 @endif
                             </div>
                             @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
                             @endif
                             <div class="mb-3">
                                 <label for="title" class="form-label">Titre</label>
@@ -64,8 +63,13 @@
                             </div>
                             <div class="mb-3">
                                 <label for="date_article" class="form-label">Date</label>
+                                <input wire:model="date_article" type="date" id="date_article" class="form-control">
+                                @error('date_article')
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $message }}
+                                </div>
+                                @enderror
 
-                                <input value="{{ \Carbon\Carbon::parse($date_article)->format('d/m/Y') }}" type="text" id="date_article" class="form-control">
                             </div>
                             <div class="mb-3">
                                 <div class="form-check">
@@ -100,14 +104,32 @@
                                     <p class="mb-1 fw-bold text-muted">Categorie</p>
 
                                     <select wire:model="category" class="select2 form-control category"
-                                            data-toggle="select2" data-placeholder="Choose ...">
+                                        data-toggle="select2" data-placeholder="Choose ...">
                                         <option></option>
                                         @foreach ($categories as $item)
-                                            <option value="{{$item->id}}" @if($category == $item->id) selected @endif>{{$item->label}}</option>
+                                        <option value="{{$item->id}}" @if($category==$item->id) selected @endif>{{$item->label}}</option>
                                         @endforeach
 
                                     </select>
                                     @error('category')
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div> <!-- end col -->
+
+                                <div class="col-lg-12 mb-3">
+                                    <p class="mb-1 fw-bold text-muted">Activité</p>
+
+                                    <select wire:model="activity" class="select2 form-control activity"
+                                        data-toggle="select2" data-placeholder="Choose ...">
+                                        <option></option>
+                                        @foreach ($activities as $item)
+                                        <option value="{{$item->id}}" @if($activity==$item->id) selected @endif>{{$item->label}}</option>
+                                        @endforeach
+
+                                    </select>
+                                    @error('activity')
                                     <div class="alert alert-danger" role="alert">
                                         {{ $message }}
                                     </div>
@@ -121,23 +143,23 @@
                                         <div class="card-body">
                                             <div class="border-dashed border-2 rounded col-3 p-1">
                                                 <img src="#" class="img-thumbnail m-1 poster_thumb"
-                                                     style="cursor: pointer" alt="">
+                                                    style="cursor: pointer" alt="">
                                             </div>
                                         </div> <!-- end card-body -->
                                     </div>
                                     @error('poster') <span class="error">{{ $message }}</span> @enderror
                                     <button type="button" class="btn btn-info" data-bs-toggle="modal"
-                                            data-bs-target="#bs-example-modal-lg">Choisir une image
+                                        data-bs-target="#bs-example-modal-lg">Choisir une image
                                     </button>
                                     <div class="modal fade" id="bs-example-modal-lg" tabindex="-1" role="dialog"
-                                         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                        aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h4 class="modal-title" id="myLargeModalLabel">Choisir une
                                                         image</h4>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-hidden="true"></button>
+                                                        aria-hidden="true"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     @livewire('admin.medias.widget')
@@ -151,11 +173,11 @@
                                 <div class="row">
                                     <div class="col-lg-12 mb-3">
                                         <label for="tags">Tags</label>
-                                        <input class="form-control form-control-solid p-0" id="tags"/>
+                                        <input class="form-control form-control-solid p-0" id="tags" />
                                     </div>
                                     <div class="col-lg-12 mb-3">
                                         <label for="keywords">Keywords</label>
-                                        <input class="form-control form-control-solid p-0" id="keywords"/>
+                                        <input class="form-control form-control-solid p-0" id="keywords" />
                                     </div>
                                     <div class="col-lg-12 mb-3">
                                         <label for="slug_">Slug</label>
@@ -166,7 +188,7 @@
                                     <div class="col-lg-12 mb-3">
                                         <div class="form-floating">
                                             <textarea wire:model="content_description" class="form-control"
-                                                      id="content_description" style="height: 100px;"></textarea>
+                                                id="content_description" style="height: 100px;"></textarea>
                                             <label for="content_description">Description</label>
                                         </div>
                                     </div>
@@ -193,15 +215,19 @@
 @include('livewire.chunks.notification')
 @script
 <script>
-
-    document.addEventListener('livewire:initialized', function () {
+    document.addEventListener('livewire:initialized', function() {
         let modalWidget = null;
-        
-        $('.category').on('change', function () {
 
-        @this.set('category', this.value)
-            ;
+        $('.category').on('change', function() {
+
+            @this.set('category', this.value);
         })
+
+        $('.activity').on('change', function() {
+
+            @this.set('activity', this.value);
+        })
+
         $('.poster_thumb').attr('src', '{{ $poster_url }}');
         $('.poster_card').removeClass('d-none');
 
@@ -211,13 +237,37 @@
             theme: 'snow',
             modules: {
                 toolbar: [
-                    [{font: []}, {size: []}],
+                    [{
+                        font: []
+                    }, {
+                        size: []
+                    }],
                     ['bold', 'italic', 'underline', 'strike'],
-                    [{color: []}, {background: []}],
-                    [{script: 'super'}, {script: 'sub'}],
-                    [{header: [1, 2, 3, 4, 5, 6]}, 'blockquote', 'code-block'],
-                    [{list: 'ordered'}, {list: 'bullet'}, {indent: '-1'}, {indent: '+1'}],
-                    ['direction', {align: []}],
+                    [{
+                        color: []
+                    }, {
+                        background: []
+                    }],
+                    [{
+                        script: 'super'
+                    }, {
+                        script: 'sub'
+                    }],
+                    [{
+                        header: [1, 2, 3, 4, 5, 6]
+                    }, 'blockquote', 'code-block'],
+                    [{
+                        list: 'ordered'
+                    }, {
+                        list: 'bullet'
+                    }, {
+                        indent: '-1'
+                    }, {
+                        indent: '+1'
+                    }],
+                    ['direction', {
+                        align: []
+                    }],
                     ['link', 'image', 'video'],
                     ['clean'],
                 ],
@@ -226,25 +276,48 @@
         const toolbar = snowEditor.getModule('toolbar');
         toolbar.addHandler('image', function() {
             modalWidget = "content";
-            @this.set('modalWidget', "content",true);
+            @this.set('modalWidget', "content", true);
             $('#bs-example-modal-lg').modal('show'); // Ouvre ton modal Bootstrap ici
         });
         snowEditor.on('text-change', () => {
-        @this.set('content', snowEditor.getSemanticHTML(), false)
-            ;
+            @this.set('content', snowEditor.getSemanticHTML(), false);
         });
 
         const resume = new Quill('#resume', {
             theme: 'snow',
             modules: {
                 toolbar: [
-                    [{font: []}, {size: []}],
+                    [{
+                        font: []
+                    }, {
+                        size: []
+                    }],
                     ['bold', 'italic', 'underline', 'strike'],
-                    [{color: []}, {background: []}],
-                    [{script: 'super'}, {script: 'sub'}],
-                    [{header: [1, 2, 3, 4, 5, 6]}, 'blockquote', 'code-block'],
-                    [{list: 'ordered'}, {list: 'bullet'}, {indent: '-1'}, {indent: '+1'}],
-                    ['direction', {align: []}],
+                    [{
+                        color: []
+                    }, {
+                        background: []
+                    }],
+                    [{
+                        script: 'super'
+                    }, {
+                        script: 'sub'
+                    }],
+                    [{
+                        header: [1, 2, 3, 4, 5, 6]
+                    }, 'blockquote', 'code-block'],
+                    [{
+                        list: 'ordered'
+                    }, {
+                        list: 'bullet'
+                    }, {
+                        indent: '-1'
+                    }, {
+                        indent: '+1'
+                    }],
+                    ['direction', {
+                        align: []
+                    }],
                     ['link', 'image', 'video'],
                     ['clean'],
                 ],
@@ -252,36 +325,35 @@
         });
         const resumeToolbar = resume.getModule('toolbar');
         resumeToolbar.addHandler('image', function() {
-            modalWidget = "resume";            
-            @this.set('modalWidget', "resume",true);
+            modalWidget = "resume";
+            @this.set('modalWidget', "resume", true);
             $('#bs-example-modal-lg').modal('show'); // Ouvre ton modal Bootstrap ici
         });
         resume.on('text-change', () => {
-        @this.set('resume', resume.getSemanticHTML(), false)
-            ;
+            @this.set('resume', resume.getSemanticHTML(), false);
         });
 
-        
+
         $wire.on('updatePoster', (d) => {
-            if(modalWidget == "content"){
+            if (modalWidget == "content") {
 
                 const range = snowEditor.getSelection();
-                console.log(range.index,d[0]);
+                console.log(range.index, d[0]);
                 if (range) {
-                snowEditor.insertEmbed(range.index, 'image', d[0]);
+                    snowEditor.insertEmbed(range.index, 'image', d[0]);
                 }
-            }else if(modalWidget == "resume"){
+            } else if (modalWidget == "resume") {
                 const range = resume.getSelection();
-                console.log(range.index,d[0]);
+                console.log(range.index, d[0]);
                 if (range) {
                     resume.insertEmbed(range.index, 'image', d[0]);
                 }
-            }else{
+            } else {
                 $('.poster_thumb').attr('src', d);
                 $('.poster_card').removeClass('d-none');
             }
             modalWidget = null;
-            @this.set('modalWidget', null,true);
+            @this.set('modalWidget', null, true);
             // Fermer le modal une fois l'image insérée
             $('#bs-example-modal-lg').modal('hide');
         });
@@ -290,10 +362,10 @@
             whitelist: [],
             maxTags: 10,
             dropdown: {
-                maxItems: 20,           // <- mixumum allowed rendered suggestions
+                maxItems: 20, // <- mixumum allowed rendered suggestions
                 classname: "", // <- custom classname for this dropdown, so it could be targeted
-                enabled: 0,             // <- show suggestions on focus
-                closeOnSelect: false    // <- do not hide the suggestions dropdown once an item has been selected
+                enabled: 0, // <- show suggestions on focus
+                closeOnSelect: false // <- do not hide the suggestions dropdown once an item has been selected
             },
             callbacks: {
                 change: function(tag) {
@@ -309,10 +381,10 @@
             whitelist: [],
             maxTags: 10,
             dropdown: {
-                maxItems: 20,           // <- mixumum allowed rendered suggestions
+                maxItems: 20, // <- mixumum allowed rendered suggestions
                 classname: "", // <- custom classname for this dropdown, so it could be targeted
-                enabled: 0,             // <- show suggestions on focus
-                closeOnSelect: false    // <- do not hide the suggestions dropdown once an item has been selected
+                enabled: 0, // <- show suggestions on focus
+                closeOnSelect: false // <- do not hide the suggestions dropdown once an item has been selected
             },
             callbacks: {
                 change: function(tag) {
@@ -323,15 +395,6 @@
             }
 
         });
-        var datepicker = new Datepicker('#date_article',{
-            onChange: function(date) {
-                var DateTime = luxon.DateTime;
-                const dateFormatted = DateTime.fromJSDate(date).toFormat('yyyy-MM-dd');
-                console.log(dateFormatted);
-                @this.set('date_article', dateFormatted, false)
-            },
-        });
-
     })
 </script>
 @endscript

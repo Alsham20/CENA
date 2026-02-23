@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Admin\Articles;
 
 use App\Mail\ArticleMail;
+use App\Models\Activity;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\Media;
@@ -24,6 +25,8 @@ class Add extends Component
     public $author;
 
     public $category;
+
+    public $activity;
 
     // public $images = [];
     public $poster;
@@ -46,6 +49,8 @@ class Add extends Component
 
     public $categories = [];
 
+    public $activities = [];
+
     public $date_article;
 
     public $modalWidget;
@@ -53,7 +58,8 @@ class Add extends Component
     public function mount(): void
     {
         $this->authorize('create articles');
-        $this->categories = Category::where('type', 'article')->get();
+        $this->categories = Category::where('type', 'Article')->get();
+        $this->activities = Activity::where('type', 'Article')->get();
     }
 
     #[On('newMedia')]
@@ -104,6 +110,7 @@ class Add extends Component
         $validated = $this->validate([
             'title' => 'required|string',
             'content' => 'required|string',
+            'activity' => 'required|exists:activities,id',
             'category' => 'required|exists:categories,id',
             'poster' => 'required|exists:media,id',
             'resume' => 'nullable',
@@ -111,7 +118,7 @@ class Add extends Component
             'content_description' => 'nullable',
             'is_featured' => 'nullable|boolean',
             'is_private' => 'nullable|boolean',
-            'date_article' => 'nullable|date',
+            'date_article' => 'required|date',
         ]);
         try {
             DB::beginTransaction();
@@ -123,16 +130,16 @@ class Add extends Component
             $validated['author_id'] = auth()->user()->id;
             $article = Article::create($validated);
 
-            $this->reset(['title', 'content', 'category', 'resume', 'tags', 'slug_', 'content_keywords', 'content_description', 'is_featured', 'is_private']);
+            $this->reset(['title', 'content', 'category', 'resume', 'tags', 'slug_', 'content_keywords', 'content_description', 'is_featured', 'is_private', 'date_article']);
             $this->dispatch('resetEditors');
             $this->dispatch('notification', ['icon' => 'success', 'title' => 'Article créé', 'message' => 'Article créé avec succès.']);
             AuditService::log("CREATION D'UN ARTICLE", null, json_encode($article->toArray()), "Creation d'article ".$article->title);
             DB::commit();
             $userpublisher = User::permission('publish articles')->where('is_active', 1)->get();
 
-            foreach ($userpublisher as $key => $us) {
-                Mail::to($us->email)->send(new ArticleMail($article));
-            }
+            // foreach ($userpublisher as $key => $us) {
+            //     Mail::to($us->email)->send(new ArticleMail($article));
+            // }
 
             $this->dispatch('new-article', $article->id);
         } catch (\Throwable $th) {

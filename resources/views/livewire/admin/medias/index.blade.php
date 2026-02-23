@@ -26,7 +26,7 @@
                         @if(count($photos) == 0)
                         @can('create medias')
                             <div class="col-sm-5">
-                                <a href="#" class="btn btn-danger mb-2" onclick="$('.add-form').removeClass('d-none'); $(this).addClass('d-none')"><i class="mdi mdi-plus-circle me-2"></i> Ajouter des medias</a>
+                                <a href="#" class="btn btn-success mb-2" onclick="$('.add-form').removeClass('d-none'); $(this).addClass('d-none')"><i class="mdi mdi-plus-circle me-2"></i> Ajouter des medias</a>
                             </div>
                         @endcan
                         @endif

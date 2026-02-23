@@ -13,7 +13,7 @@ class ActiviteController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.activities.list');
     }
 
     /**
@@ -21,15 +21,7 @@ class ActiviteController extends Controller
      */
     public function create()
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        return view('admin.activities.create');
     }
 
     /**
@@ -37,7 +29,9 @@ class ActiviteController extends Controller
      */
     public function show(Activity $activity)
     {
-        //
+        return view('admin.activities.show', [
+            'param' => $activity->id,
+        ]);
     }
 
     /**
@@ -45,7 +39,9 @@ class ActiviteController extends Controller
      */
     public function edit(Activity $activity)
     {
-        //
+        return view('admin.activities.edit', [
+            'param' => $activity->id,
+        ]);
     }
 
     /**

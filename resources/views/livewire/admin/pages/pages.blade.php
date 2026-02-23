@@ -25,7 +25,7 @@
                     <div class="row mb-2">
                         @can('create pages')
                             <div class="col-sm-5">
-                                <a href="{{route('pages.create')}}" class="btn btn-danger mb-2"><i
+                                <a href="{{route('pages.create')}}" class="btn btn-success mb-2"><i
                                         class="mdi mdi-plus-circle me-2"></i> Ajouter une page</a>
                             </div>
                         @endcan

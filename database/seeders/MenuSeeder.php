@@ -13,7 +13,7 @@ class MenuSeeder extends Seeder
      */
     public function run(): void
     {
-                // Menu Emplacement
+        // Menu Emplacement
         $menu_emplacement = MenuEmplacement::create([
             'label' => 'Admin Sidebar',
             'code_menu' => 'admin-sidebar',
@@ -246,6 +246,46 @@ class MenuSeeder extends Seeder
             'parent_id' => $article->id,
         ]);
 
+        // Vidéo
+        $video = Menu::create([
+            'label' => 'Vidéos',
+            'primary_title' => 'Vidéos',
+            'secondary_title' => 'Vidéos',
+            'url' => parse_url(route('videos.index'))['path'],
+            'icon' => 'uil-video',
+            'permission' => 'list videos',
+            'position' => 6,
+            'new_tab' => false,
+            'menu_emplacement_id' => $menu_emplacement->id,
+            'parent_id' => null,
+        ]);
+
+        $video_list = Menu::create([
+            'label' => 'Liste des videos',
+            'primary_title' => 'Videos',
+            'secondary_title' => 'Videos',
+            'url' => parse_url(route('videos.index'))['path'],
+            'icon' => 'uil-video',
+            'permission' => 'list videos',
+            'position' => 1,
+            'new_tab' => false,
+            'menu_emplacement_id' => $menu_emplacement->id,
+            'parent_id' => $video->id,
+        ]);
+
+        $video_create = Menu::create([
+            'label' => 'Ajouter une vidéo',
+            'primary_title' => 'Videos',
+            'secondary_title' => 'Videos',
+            'url' => parse_url(route('videos.create'))['path'],
+            'icon' => 'uil-video',
+            'permission' => 'create videos',
+            'position' => 2,
+            'new_tab' => false,
+            'menu_emplacement_id' => $menu_emplacement->id,
+            'parent_id' => $video->id,
+        ]);
+
         // Pages
         $page = Menu::create([
             'label' => 'Pages',
@@ -254,7 +294,7 @@ class MenuSeeder extends Seeder
             'url' => parse_url(route('pages.index'))['path'],
             'icon' => 'uil-file-alt',
             'permission' => 'list pages',
-            'position' => 6,
+            'position' => 7,
             'new_tab' => false,
             'menu_emplacement_id' => $menu_emplacement->id,
             'parent_id' => null,
@@ -294,7 +334,7 @@ class MenuSeeder extends Seeder
             'url' => parse_url(route('medias.index'))['path'],
             'icon' => 'uil-images',
             'permission' => 'list medias',
-            'position' => 7,
+            'position' => 8,
             'new_tab' => false,
             'menu_emplacement_id' => $menu_emplacement->id,
             'parent_id' => null,
@@ -321,7 +361,7 @@ class MenuSeeder extends Seeder
             'url' => parse_url(route('menus.index'))['path'],
             'icon' => 'uil-list-ul',
             'permission' => 'list menus',
-            'position' => 8,
+            'position' => 9,
             'new_tab' => false,
             'menu_emplacement_id' => $menu_emplacement->id,
             'parent_id' => null,
@@ -374,7 +414,7 @@ class MenuSeeder extends Seeder
             'url' => parse_url(route('settings.index'))['path'],
             'icon' => 'uil-sliders-v',
             'permission' => 'list settings',
-            'position' => 9,
+            'position' => 10,
             'new_tab' => false,
             'menu_emplacement_id' => $menu_emplacement->id,
             'parent_id' => null,
@@ -414,7 +454,7 @@ class MenuSeeder extends Seeder
             'url' => parse_url(route('faqs.index'))['path'],
             'icon' => 'uil-question-circle',
             'permission' => 'list faqs',
-            'position' => 10,
+            'position' => 11,
             'new_tab' => false,
             'menu_emplacement_id' => $menu_emplacement->id,
             'parent_id' => null,
@@ -448,9 +488,9 @@ class MenuSeeder extends Seeder
 
         // Equipes
         $teams = Menu::create([
-            'label' => 'Membres du Bureau',
-            'primary_title' => 'Membres du Bureau',
-            'secondary_title' => 'Membres du Bureau',
+            'label' => 'Membres du Conseil',
+            'primary_title' => 'Membres du Conseil',
+            'secondary_title' => 'Membres du Conseil',
             'url' => parse_url(route('teams.index'))['path'],
             'icon' => 'uil-users-alt',
             'permission' => 'list teams',
@@ -461,9 +501,9 @@ class MenuSeeder extends Seeder
         ]);
 
         $teams_list = Menu::create([
-            'label' => 'Liste des membres du bureau',
-            'primary_title' => 'Membres du Bureau',
-            'secondary_title' => 'Membres du Bureau',
+            'label' => 'Liste des membres du conseil',
+            'primary_title' => 'Membres du Conseil',
+            'secondary_title' => 'Membres du Conseil',
             'url' => parse_url(route('teams.index'))['path'],
             'icon' => '',
             'permission' => 'list teams',
@@ -475,8 +515,8 @@ class MenuSeeder extends Seeder
 
         $teams_create = Menu::create([
             'label' => 'Ajouter un membre',
-            'primary_title' => 'Membres du Bureau',
-            'secondary_title' => 'Membres du Bureau',
+            'primary_title' => 'Membres du Conseil',
+            'secondary_title' => 'Membres du Conseil',
             'url' => parse_url(route('teams.create'))['path'],
             'icon' => '',
             'permission' => 'create teams',
@@ -486,6 +526,73 @@ class MenuSeeder extends Seeder
             'parent_id' => $teams->id,
         ]);
 
+        //Élections
+        $elections = Menu::create([
+            'label' => 'Elections',
+            'primary_title' => 'Elections',
+            'secondary_title' => 'Elections',
+            'url' => parse_url(route('elections.index'))['path'],
+            'icon' => 'uil-box',
+            'permission' => 'list elections',
+            'position' => 13,
+            'new_tab' => false,
+            'menu_emplacement_id' => $menu_emplacement->id,
+            'parent_id' => null,
+        ]);
+
+        $elections_list = Menu::create([
+            'label' => 'Liste des élections',
+            'primary_title' => 'Elections',
+            'secondary_title' => 'Elections',
+            'url' => parse_url(route('elections.index'))['path'],
+            'icon' => '',
+            'permission' => 'list elections',
+            'position' => 1,
+            'new_tab' => false,
+            'menu_emplacement_id' => $menu_emplacement->id,
+            'parent_id' => $elections->id,
+        ]);
+
+        $elections_create = Menu::create([
+            'label' => 'Ajouter une élection',
+            'primary_title' => 'Nouvelle élection',
+            'secondary_title' => 'Nouvelle élection',
+            'url' => parse_url(route('elections.create'))['path'],
+            'icon' => '',
+            'permission' => 'create elections',
+            'position' => 2,
+            'new_tab' => false,
+            'menu_emplacement_id' => $menu_emplacement->id,
+            'parent_id' => $elections->id,
+        ]);
+
+        $resultats_list = Menu::create([
+            'label' => 'Liste des résultats',
+            'primary_title' => 'Résultats',
+            'secondary_title' => 'Résultats',
+            'url' => parse_url(route('resultats.index'))['path'],
+            'icon' => '',
+            'permission' => 'list resultats',
+            'position' => 3,
+            'new_tab' => false,
+            'menu_emplacement_id' => $menu_emplacement->id,
+            'parent_id' => $elections->id,
+        ]);
+
+        $resultats_create = Menu::create([
+            'label' => 'Ajouter un résultat',
+            'primary_title' => 'Nouveau résultat',
+            'secondary_title' => 'Nouveau résultat',
+            'url' => parse_url(route('resultats.create'))['path'],
+            'icon' => '',
+            'permission' => 'create resultats',
+            'position' => 4,
+            'new_tab' => false,
+            'menu_emplacement_id' => $menu_emplacement->id,
+            'parent_id' => $elections->id,
+        ]);
+
+
         // Evenements
         $events = Menu::create([
             'label' => 'Evènements',
@@ -494,7 +601,7 @@ class MenuSeeder extends Seeder
             'url' => parse_url(route('events.index'))['path'],
             'icon' => 'uil-calendar-alt',
             'permission' => 'list events',
-            'position' => 13,
+            'position' => 14,
             'new_tab' => false,
             'menu_emplacement_id' => $menu_emplacement->id,
             'parent_id' => null,
@@ -527,43 +634,43 @@ class MenuSeeder extends Seeder
         ]);
 
         // Activités
-        $activites = Menu::create([
+        $activities = Menu::create([
             'label' => 'Activités',
             'primary_title' => 'Activités',
             'secondary_title' => 'Activités',
-            'url' => parse_url(route('activites.index'))['path'],
+            'url' => parse_url(route('activities.index'))['path'],
             'icon' => 'uil-box',
-            'permission' => 'list activites',
-            'position' => 14,
+            'permission' => 'list activities',
+            'position' => 15,
             'new_tab' => false,
             'menu_emplacement_id' => $menu_emplacement->id,
             'parent_id' => null,
         ]);
 
-        $activites_list = Menu::create([
+        $activities_list = Menu::create([
             'label' => 'Liste des activités',
             'primary_title' => 'Activités',
             'secondary_title' => 'Activités',
-            'url' => parse_url(route('activites.index'))['path'],
+            'url' => parse_url(route('activities.index'))['path'],
             'icon' => '',
-            'permission' => 'list activites',
+            'permission' => 'list activities',
             'position' => 3,
             'new_tab' => false,
             'menu_emplacement_id' => $menu_emplacement->id,
-            'parent_id' => $activites->id,
+            'parent_id' => $activities->id,
         ]);
 
-        $activites_create = Menu::create([
+        $activities_create = Menu::create([
             'label' => 'Ajouter une activité',
             'primary_title' => 'Nouvelle activité',
             'secondary_title' => 'Nouvelle activité',
-            'url' => parse_url(route('activites.create'))['path'],
+            'url' => parse_url(route('activities.create'))['path'],
             'icon' => '',
-            'permission' => 'create activites',
+            'permission' => 'create activities',
             'position' => 4,
             'new_tab' => false,
             'menu_emplacement_id' => $menu_emplacement->id,
-            'parent_id' => $activites->id,
+            'parent_id' => $activities->id,
         ]);
 
         // Documentation
@@ -572,9 +679,9 @@ class MenuSeeder extends Seeder
             'primary_title' => 'Documentations',
             'secondary_title' => 'Documentations',
             'url' => parse_url(route('documentation.index'))['path'],
-            'icon' => 'uil-wall',
+            'icon' => 'uil-file-alt',
             'permission' => 'list documentation',
-            'position' => 17,
+            'position' => 16,
             'new_tab' => false,
             'menu_emplacement_id' => $menu_emplacement->id,
             'parent_id' => null,
@@ -612,9 +719,9 @@ class MenuSeeder extends Seeder
             'primary_title' => 'Newsletter',
             'secondary_title' => 'Newsletter',
             'url' => parse_url(route('newsletters.index'))['path'],
-            'icon' => 'uil-wall',
+            'icon' => 'uil-newspaper',
             'permission' => 'list followers',
-            'position' => 18,
+            'position' => 17,
             'new_tab' => false,
             'menu_emplacement_id' => $menu_emplacement->id,
             'parent_id' => null,

@@ -11,6 +11,8 @@ use App\Services\FileService;
 use Livewire\WithFileUploads;
 use App\Services\AuditService;
 use App\Models\RessourcesUtile;
+use App\Models\RessourcesUtils;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class Edit extends Component
@@ -21,9 +23,11 @@ class Edit extends Component
 
     public $description;
 
+    public $object;
+
     public $doc_id;
 
-    public $categorie_id;
+    public $category;
 
     public $doc_type;
 
@@ -47,20 +51,21 @@ class Edit extends Component
     {
         $this->authorize('edit documentation');
         $this->categories = Category::where('type', 'Documentation')->get();
-        $ressourceUtile = RessourcesUtile::where('id', $id)->first();
+        $ressourceUtile = RessourcesUtils::where('id', $id)->first();
 
         if ($ressourceUtile == null) {
             abort(404);
         }
         $this->ressourceUtile = $ressourceUtile;
         $this->name = $ressourceUtile->name;
+        $this->object = $ressourceUtile->object;
         $this->description = $ressourceUtile->description;
-        $this->categorie_id = $ressourceUtile->categorie_id;
+        $this->category = $ressourceUtile->category;
         $this->doc_id = $ressourceUtile->doc_id;
         $this->doc_type = $ressourceUtile->doc_type;
         $this->doc_size = $ressourceUtile->doc_size;
         $this->doc_path = $ressourceUtile->doc_path;
-        $this->date_creation = $ressourceUtile->date_creation;
+        $this->date_creation = ($ressourceUtile->date_creation)  ? Carbon::parse($ressourceUtile->date_creation)->format('Y-m-d') : '';
     }
 
     public function updatedAttachedFile()
@@ -101,9 +106,10 @@ class Edit extends Component
         $this->author = auth()->user()->id;
         $validated = $this->validate([
             'name' => 'required|string',
+            'object' => 'required|string',
             'description' => 'nullable|string',
             'date_creation' => 'nullable|date',
-            'categorie_id' => 'required|exists:categories,id',
+            'category' => 'required|exists:categories,id',
             'attached_file_' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,bmp,png,zip,rar,xls,xlsx',
         ]);
         try {
@@ -115,7 +121,7 @@ class Edit extends Component
 
             if ($this->attached_file_) {
                 $fileupload = FileService::uploadOtherFile($this->attached_file_, 'ressources/');
-                $validated['doc_path'] = $fileupload['path'].$fileupload['name'];
+                $validated['doc_path'] = $fileupload['path'] . $fileupload['name'];
                 $validated['doc_type'] = $fileupload['type'];
                 $validated['doc_size'] = round($fileupload['size'] / 1024, 2);
                 $validated['doc_id'] = Str::uuid();
@@ -128,13 +134,13 @@ class Edit extends Component
             $ressourceUtile->update($validated);
 
             $this->dispatch('notification', ['icon' => 'success', 'title' => 'Modification', 'message' => 'Ressource utile modifiée avec succès.']);
-            AuditService::log("MODIFICATION D'UNE RESSOURCE UTILE", json_encode($old), json_encode($ressourceUtile->toArray()), 'Modificqtion de la ressource utile '.$ressourceUtile->name);
+            AuditService::log("MODIFICATION D'UNE RESSOURCE UTILE", json_encode($old), json_encode($ressourceUtile->toArray()), 'Modificqtion de la ressource utile ' . $ressourceUtile->name);
             DB::commit();
             $this->dispatch('edit-ressource-utile', $ressourceUtile->id);
         } catch (\Throwable $th) {
             DB::rollBack();
             $this->dispatch('notification', ['icon' => 'error', 'title' => 'Erreur', 'message' => 'Une erreur est survenue.']);
-            AuditService::logError('Modification | Erreur lors de la modification de la ressource utile | '.$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+            AuditService::logError('Modification | Erreur lors de la modification de la ressource utile | ' . $th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
         }
     }
 

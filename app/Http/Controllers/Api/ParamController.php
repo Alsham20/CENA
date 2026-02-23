@@ -37,7 +37,17 @@ class ParamController extends Controller
             'site_map_link',
             'president_title',
             'president_name',
-
+            'freephone_cena',
+            'whatsApp_cena_1',
+            'whatsApp_cena_2',
+            'facebook_cena',
+            'email_cena',
+            'freephone_e_learning',
+            'whatsApp_e_learning',
+            'freephone_e_accreditation',
+            'whatsApp_e_accreditation',
+            'freephone_e_recrutement',
+            'whatsApp_e_recrutement',
         ];
 
         $params = Setting::whereIn('key', $paramAuthorize)->where('type', '<>', 'password')->get();

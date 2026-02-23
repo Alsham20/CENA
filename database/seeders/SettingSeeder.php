@@ -14,7 +14,7 @@ class SettingSeeder extends Seeder
     public function run(): void
     {
         //
-                Setting::firstOrCreate([
+        Setting::firstOrCreate([
             'key' => 'smtp_host',
             'value' => 'smtp.hostinger.com',
             'label' => 'SMTP Host',
@@ -49,7 +49,7 @@ class SettingSeeder extends Seeder
         // Parametre email from name
         Setting::firstOrCreate([
             'key' => 'email_from_name',
-            'value' => 'Ars',
+            'value' => 'Cena',
             'label' => 'Email From Name',
             'type' => 'string',
         ]);
@@ -73,14 +73,14 @@ class SettingSeeder extends Seeder
         // Parametre site
         Setting::firstOrCreate([
             'key' => 'site_name',
-            'value' => 'Ars',
+            'value' => 'Cena',
             'label' => 'Site Name',
             'type' => 'string',
         ]);
 
         Setting::firstOrCreate([
             'key' => 'site_email',
-            'value' => 'ars@presidence.bj',
+            'value' => 'cena.bj',
             'label' => 'Site E-mail',
             'type' => 'string',
         ]);
@@ -122,21 +122,21 @@ class SettingSeeder extends Seeder
 
         Setting::firstOrCreate([
             'key' => 'site_description',
-            'value' => 'Ars',
+            'value' => 'Cena',
             'label' => 'Site Description',
             'type' => 'string',
         ]);
 
         Setting::firstOrCreate([
             'key' => 'site_keywords',
-            'value' => 'Ars',
+            'value' => 'Cena',
             'label' => 'Site Keywords',
             'type' => 'string',
         ]);
 
         Setting::firstOrCreate([
             'key' => 'site_author',
-            'value' => 'Ars',
+            'value' => 'Cena',
             'label' => 'Site Author',
             'type' => 'string',
         ]);
@@ -221,6 +221,95 @@ class SettingSeeder extends Seeder
             'type' => 'string',
         ]);
 
+        // Numéro vert Cena
+        Setting::firstOrCreate([
+            'key' => 'freephone_cena',
+            'value' => '7959',
+            'label' => 'Numéro vert Cena',
+            'type' => 'string',
+        ]);
+
+        // WhatsApp 1 Cena
+        Setting::firstOrCreate([
+            'key' => 'whatsApp_cena_1',
+            'value' => '0196000000',
+            'label' => 'WhatsApp 1',
+            'type' => 'string',
+        ]);
+
+        // WhatsApp 2 Cena
+        Setting::firstOrCreate([
+            'key' => 'whatsApp_cena_2',
+            'value' => '0197000000',
+            'label' => 'WhatsApp 2',
+            'type' => 'string',
+        ]);
+
+        // Facebook Cena
+        Setting::firstOrCreate([
+            'key' => 'facebook_cena',
+            'value' => 'https://www.facebook.com/p/Commission-Electorale-Nationale-Autonome-Benin-100064532388137/',
+            'label' => 'Facebook Cena',
+            'type' => 'string',
+        ]);
+
+        // Email Cena
+        Setting::firstOrCreate([
+            'key' => 'email_cena',
+            'value' => 'contact@cena.bj',
+            'label' => 'Email Cena',
+            'type' => 'string',
+        ]);
+
+
+        // Numéro vert E-Learning
+        Setting::firstOrCreate([
+            'key' => 'freephone_e_learning',
+            'value' => '7960',
+            'label' => 'Numéro vert E-Learning',
+            'type' => 'string',
+        ]);
+
+        // WhatsApp E-Learning
+        Setting::firstOrCreate([
+            'key' => 'whatsApp_e_learning',
+            'value' => '+229 96 11 11 11',
+            'label' => 'WhatsApp E-Learning',
+            'type' => 'string',
+        ]);
+
+        // Numéro vert E-Accréditation
+        Setting::firstOrCreate([
+            'key' => 'freephone_e_accreditation',
+            'value' => '7961',
+            'label' => 'Numéro vert E-Accréditation',
+            'type' => 'string',
+        ]);
+
+        // WhatsApp E-Accréditation
+        Setting::firstOrCreate([
+            'key' => 'whatsApp_e_accreditation',
+            'value' => '+229 96 22 22 22',
+            'label' => 'WhatsApp E-Accréditation',
+            'type' => 'string',
+        ]);
+
+        // Numéro vert E-Recrutement
+        Setting::firstOrCreate([
+            'key' => 'freephone_e_recrutement',
+            'value' => '7962',
+            'label' => 'Numéro vert E-Recrutement',
+            'type' => 'string',
+        ]);
+
+        // WhatsApp E-Recrutement
+        Setting::firstOrCreate([
+            'key' => 'whatsApp_e_recrutement',
+            'value' => '+229 96 33 33 33',
+            'label' => 'WhatsApp E-Recrutement',
+            'type' => 'string',
+        ]);
+
         // parametre otp
         Setting::firstOrCreate([
             'key' => 'sms_url',
@@ -248,7 +337,7 @@ class SettingSeeder extends Seeder
         // parametre otp
         Setting::firstOrCreate([
             'key' => 'sms_from',
-            'value' => 'ARS',
+            'value' => 'CENA',
             'label' => 'Expéditeur API SMS',
             'type' => 'string',
         ]);
@@ -256,7 +345,7 @@ class SettingSeeder extends Seeder
         // parametre copyright
         Setting::firstOrCreate([
             'key' => 'copyright',
-            'value' => 'Copyright © 2022 Ars. Tous droits réservés.',
+            'value' => 'Copyright © 2024 Cena. Tous droits réservés.',
             'label' => 'Copyright',
             'type' => 'string',
         ]);
@@ -340,7 +429,7 @@ class SettingSeeder extends Seeder
         // parametre documentation base path
         Setting::firstOrCreate([
             'key' => 'documentation_base_path',
-            'value' => '../../aacom_storage/documentation',
+            'value' => '../../cana_storage/documentation',
             'label' => 'Documentation Base Path',
             'type' => 'string',
         ]);
@@ -351,7 +440,7 @@ class SettingSeeder extends Seeder
             'label' => 'Contact Mail',
             'type' => 'string',
         ]);
-        
+
         Setting::firstOrCreate([
             'key' => 'article_slider_limit',
             'value' => '5',

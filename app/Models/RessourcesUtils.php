@@ -13,8 +13,8 @@ class RessourcesUtils extends Model
 
     protected $table = 'documentations';
 
-    public function categorie()
+    public function categories()
     {
-        return $this->hasOne(Category::class, 'id', 'categorie_id');
+        return $this->hasOne(Category::class, 'id', 'category');
     }
 }

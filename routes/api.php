@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\ArticlesController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ContactMailController;
 use App\Http\Controllers\Api\DocumentController;
+use App\Http\Controllers\Api\ElectionController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\FaqController;
 use App\Http\Controllers\Api\MenuEmplacementController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\ParamController;
 use App\Http\Controllers\Api\RessourceUtileController;
 use App\Http\Controllers\Api\TeamController;
+use App\Http\Controllers\Api\VideoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +54,17 @@ Route::prefix('cena/v1/')->group(function () {
         Route::get('/{article}', [ArticlesController::class, 'show']);
         Route::get('/{slug}/show', [ArticlesController::class, 'showBySlug']);
     });
+
+    // Liste des vidéos
+    Route::group(['prefix' => 'videos'], function () {
+        Route::get('/', [VideoController::class, 'index']);
+    });
+
+    // Liste des élections
+    Route::group(['prefix' => 'elections'], function () {
+        Route::get('/', [ElectionController::class, 'index']);
+    });
+
     // Newsletter
     Route::group(['prefix' => 'news-letter'], function () {
         Route::post('/', [NewsletterController::class, 'store']);
@@ -72,6 +85,8 @@ Route::prefix('cena/v1/')->group(function () {
         Route::get('/avis-et-decisions', [RessourceUtileController::class, 'index']);
         Route::get('/documentation', [RessourceUtileController::class, 'documentation']);
         Route::get('/ressourcesByCategorie', [RessourceUtileController::class, 'ressourceByCategorie']);
+        Route::get('/decisions', [RessourceUtileController::class, 'getDecisions']);
+        Route::get('/lois', [RessourceUtileController::class, 'getLois']);
     });
 
     // Catégorie
@@ -92,5 +107,4 @@ Route::prefix('cena/v1/')->group(function () {
 
     // Liste des faqs
     Route::get('/faqs', [FaqController::class, 'index']);
-
 });

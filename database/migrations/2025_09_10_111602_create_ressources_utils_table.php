@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('documentations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('requester')->nullable();
+            $table->string('object')->nullable();
             $table->string('doc_id');
             $table->dateTime('date_creation')->nullable();
-            $table->unsignedBigInteger('categorie_id')->nullable();
-            $table->foreign('categorie_id')->references('id')->on('categories')->nullOnDelete();
+            $table->unsignedBigInteger('category')->nullable();
+            $table->foreign('category')->references('id')->on('categories')->nullOnDelete();
             $table->text('description')->nullable();
             $table->string('doc_type')->nullable();
             $table->integer('doc_size')->nullable();

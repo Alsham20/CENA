@@ -123,7 +123,7 @@ class ArticlesController extends Controller
                 ->when(isset($validator['isPrivate']) && $validator['isPrivate'], function ($query) {
                     return $query->where('is_private', 1);
                 })
-                ->with('categories')
+                ->with(['categories', 'activities'])
                 ->where('is_published', true)
                 ->where('is_archive', false)
                 ->where('is_deleted', false)
@@ -391,7 +391,7 @@ class ArticlesController extends Controller
     {
         try {
 
-            $article = Article::with('categories')
+            $article = Article::with('categories')->with('activities')
                 ->with('image')->where('slug', $slug)->first();
             if ($article === null) {
                 return response()->json(['error' => [__('Item not found')]], 404);

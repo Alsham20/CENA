@@ -7,11 +7,11 @@
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{route('teams.index')}}">Equipe</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('teams.index')}}">Membres</a></li>
                         <li class="breadcrumb-item active">Liste</li>
                     </ol>
                 </div>
-                <h4 class="page-title">Équipe</h4>
+                <h4 class="page-title">Membres du Conseil</h4>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
                     <div class="row mb-2">
                         @can('create teams')
                             <div class="col-sm-5">
-                                <a href="{{route('teams.create')}}" class="btn btn-danger mb-2"><i class="mdi mdi-plus-circle me-2"></i> Ajouter un membre</a>
+                                <a href="{{route('teams.create')}}" class="btn btn-success mb-2"><i class="mdi mdi-plus-circle me-2"></i> Ajouter un membre</a>
                             </div>
                         @endcan
                         <!-- end col-->
@@ -140,7 +140,7 @@
                         </table>
                             @if ($teams->count() == 0)
                                 <div class="alert alert-info" role="alert">
-                                    Aucun membre d'équipe n'est disponible.
+                                    Aucun membre du conseil n'est disponible.
                                 </div>
                             @endif
                     </div>
@@ -233,7 +233,7 @@
     $wire.on('team-deleted', () => {
         Swal.fire(
             'Supprimé!',
-            'Le membre d\'équipe a été supprimée.',
+            'Le membre du conseil a été supprimé.',
             'success'
         );
     })

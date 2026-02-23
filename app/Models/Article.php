@@ -10,11 +10,16 @@ class Article extends Model
 {
     use HasFactory;
 
-        protected $fillable = ['title', 'content', 'author_id', 'category', 'poster', 'resume', 'slug', 'content_keywords', 'content_description', 'tags', 'is_featured', 'is_private', 'date_article'];
+    protected $fillable = ['title', 'content', 'author_id', 'category', 'activity', 'poster', 'resume', 'slug', 'content_keywords', 'content_description', 'tags', 'is_featured', 'is_private', 'date_article'];
 
     public function categories(): HasOne
     {
         return $this->hasOne(Category::class, 'id', 'category');
+    }
+
+    public function activities(): HasOne
+    {
+        return $this->hasOne(Activity::class, 'id', 'activity');
     }
 
     public function author(): HasOne

@@ -24,7 +24,7 @@
                     <div class="row mb-2">
                         @can('create campaigns')
                             <div class="col-sm-5">
-                                <a href="{{route('newsletters.create-campaign')}}" class="btn btn-danger mb-2"><i class="mdi mdi-plus-circle me-2"></i> Créer une campagne</a>
+                                <a href="{{route('newsletters.create-campaign')}}" class="btn btn-success mb-2"><i class="mdi mdi-plus-circle me-2"></i> Créer une campagne</a>
                             </div>
                         @endcan
                         <!-- end col-->

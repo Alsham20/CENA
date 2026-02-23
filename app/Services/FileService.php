@@ -60,7 +60,7 @@ class FileService
             'type' => $file->getMimeType(),
             'size' => $file->getSize(),
             'extension' => $file->getClientOriginalExtension(),
-            'base_url' => asset('storage/'),
+            'base_url' => asset('storage/app/public'),
             'author_id' => auth()->user()->id,
         ];
 

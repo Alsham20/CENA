@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use Livewire\Livewire;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +16,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+
     return redirect()->route('dashboard');
+});
+Route::get('/symlink', function () {
+    Artisan::call('storage:link');
+});
+
+Route::get('/storage-link', function(){
+    $targetFolder = storage_path('app/public');
+    $linkFolder = public_path('storage');
+    symlink($targetFolder, $linkFolder);
+});
+
+Livewire::setUpdateRoute(function ($handle) {
+    return Route::post('/api/public/livewire/update', $handle);
 });

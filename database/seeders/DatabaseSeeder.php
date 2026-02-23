@@ -5,7 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Media;
-use Database\Seeders\Admin\RoleSeeder;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'allamagboa@gmail.com',
             'phone' => '+2290190129340',
             'email_verified_at' => now(),
-            'password' => Hash::make('P@ssw0rd123'),
+            'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
             'is_active' => true,
 
@@ -77,91 +77,92 @@ class DatabaseSeeder extends Seeder
         $user3->assignRole('super-admin');
         $user4->assignRole('super-admin');
 
-        Media::create([
-            'name' => 'president.jpeg',
-            'path' => '/medias',
-            'size' => 5,
-            'type' => 'jpg',
-            'base_url' => env('APP_URL', '') . '/storage',
-            'thumbnail' => 'thumbnail/president.jpeg',
-            'author_id' => 1,
-        ]);
+        // Media::create([
+        //     'name' => 'president.jpeg',
+        //     'path' => '/medias',
+        //     'size' => 5,
+        //     'type' => 'jpg',
+        //     'base_url' => env('APP_URL', '') . '/storage',
+        //     'thumbnail' => 'thumbnail/president.jpeg',
+        //     'author_id' => 1,
+        // ]);
 
-        Media::create([
-            'name' => 'team-2.jpg',
-            'path' => '/medias',
-            'size' => 5,
-            'type' => 'jpg',
-            'base_url' => env('APP_URL', '') . '/storage',
-            'thumbnail' => 'thumbnail/team-2.jpg',
-            'author_id' => 1,
-        ]);
+        // Media::create([
+        //     'name' => 'team-2.jpg',
+        //     'path' => '/medias',
+        //     'size' => 5,
+        //     'type' => 'jpg',
+        //     'base_url' => env('APP_URL', '') . '/storage',
+        //     'thumbnail' => 'thumbnail/team-2.jpg',
+        //     'author_id' => 1,
+        // ]);
 
-        Media::create([
-            'name' => 'team-3.jpg',
-            'path' => '/medias',
-            'size' => 5,
-            'type' => 'jpg',
-            'base_url' => env('APP_URL', '') . '/storage',
-            'thumbnail' => 'thumbnail/team-3.jpg',
-            'author_id' => 1,
-        ]);
+        // Media::create([
+        //     'name' => 'team-3.jpg',
+        //     'path' => '/medias',
+        //     'size' => 5,
+        //     'type' => 'jpg',
+        //     'base_url' => env('APP_URL', '') . '/storage',
+        //     'thumbnail' => 'thumbnail/team-3.jpg',
+        //     'author_id' => 1,
+        // ]);
 
-        Media::create([
-            'name' => 'team-4.jpg',
-            'path' => '/medias',
-            'size' => 5,
-            'type' => 'jpg',
-            'base_url' => env('APP_URL', '') . '/storage',
-            'thumbnail' => 'thumbnail/team-4.jpg',
-            'author_id' => 1,
-        ]);
+        // Media::create([
+        //     'name' => 'team-4.jpg',
+        //     'path' => '/medias',
+        //     'size' => 5,
+        //     'type' => 'jpg',
+        //     'base_url' => env('APP_URL', '') . '/storage',
+        //     'thumbnail' => 'thumbnail/team-4.jpg',
+        //     'author_id' => 1,
+        // ]);
 
-        Media::create([
-            'name' => 'team_01.jpg',
-            'path' => '/medias',
-            'size' => 5,
-            'type' => 'jpg',
-            'base_url' => env('APP_URL', '') . '/storage',
-            'thumbnail' => 'thumbnail/team_01.jpg',
-            'author_id' => 1,
-        ]);
+        // Media::create([
+        //     'name' => 'team_01.jpg',
+        //     'path' => '/medias',
+        //     'size' => 5,
+        //     'type' => 'jpg',
+        //     'base_url' => env('APP_URL', '') . '/storage',
+        //     'thumbnail' => 'thumbnail/team_01.jpg',
+        //     'author_id' => 1,
+        // ]);
 
-        Media::create([
-            'name' => 'team_02.jpg',
-            'path' => '/medias',
-            'size' => 5,
-            'type' => 'jpg',
-            'base_url' => env('APP_URL', '') . '/storage',
-            'thumbnail' => 'thumbnail/team_02.jpg',
-            'author_id' => 1,
-        ]);
+        // Media::create([
+        //     'name' => 'team_02.jpg',
+        //     'path' => '/medias',
+        //     'size' => 5,
+        //     'type' => 'jpg',
+        //     'base_url' => env('APP_URL', '') . '/storage',
+        //     'thumbnail' => 'thumbnail/team_02.jpg',
+        //     'author_id' => 1,
+        // ]);
 
-        Media::create([
-            'name' => 'team_03.jpg',
-            'path' => '/medias',
-            'size' => 5,
-            'type' => 'jpg',
-            'base_url' => env('APP_URL', '') . '/storage',
-            'thumbnail' => 'thumbnail/team_03.jpg',
-            'author_id' => 1,
-        ]);
+        // Media::create([
+        //     'name' => 'team_03.jpg',
+        //     'path' => '/medias',
+        //     'size' => 5,
+        //     'type' => 'jpg',
+        //     'base_url' => env('APP_URL', '') . '/storage',
+        //     'thumbnail' => 'thumbnail/team_03.jpg',
+        //     'author_id' => 1,
+        // ]);
 
-        Media::create([
-            'name' => 'team_04.jpg',
-            'path' => '/medias',
-            'size' => 5,
-            'type' => 'jpg',
-            'base_url' => env('APP_URL', '') . '/storage',
-            'thumbnail' => 'thumbnail/team_04.jpg',
-            'author_id' => 1,
-        ]);
+        // Media::create([
+        //     'name' => 'team_04.jpg',
+        //     'path' => '/medias',
+        //     'size' => 5,
+        //     'type' => 'jpg',
+        //     'base_url' => env('APP_URL', '') . '/storage',
+        //     'thumbnail' => 'thumbnail/team_04.jpg',
+        //     'author_id' => 1,
+        // ]);
 
         $this->call([
             CategorySeeder::class,
+            ActivitySeeder::class,
         ]);
 
-        \App\Models\Article::factory(100)->create();
+        // \App\Models\Article::factory(100)->create();
         // $page = ['mot-du-president', 'historique', 'politique-confidentialite', 'attributions-et-fonctions', 'organisation-et-fonctionnement', 'securite-des-patients', 'accreditation-des-professionnels-de-sante', 'sante-numerique', 'certification-des-etablissements-de-sante'];
         // $title = ['Mot du président', 'Historique de l’A.R.S', 'Mentions légales et gestions des cookies', 'Attributions et fonctions', 'Organisation et fonctionnement', 'Sécurité des patients', 'Accréditation des professionnels de santé', 'Santé numérique', 'Certification des établissements de santé'];
         // foreach ($page as $key => $p) {
@@ -181,13 +182,13 @@ class DatabaseSeeder extends Seeder
         //         'resume' => fake()->sentence(),
         //     ]);
         // }
-        \App\Models\Faq::factory(5)->create();
+        // \App\Models\Faq::factory(5)->create();
 
-        $this->call([
-            DocumentationSeeder::class,
-            TeamSeeder::class,
-            EventSeeder::class,
-        ]);
+        // $this->call([
+        //     DocumentationSeeder::class,
+        //     TeamSeeder::class,
+        //     EventSeeder::class,
+        // ]);
 
         // Artisan::call('l5-swagger:generate');
     }

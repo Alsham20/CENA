@@ -44,12 +44,12 @@
             <div class="page-title-box">
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Documentation</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('documentation.index')}}">Documents</a></li>
                         <li class="breadcrumb-item active">Ajouter</li>
                     </ol>
                 </div>
-                <h4 class="page-title">Ajouter une ressource</h4>
+                <h4 class="page-title">Ajouter un document</h4>
             </div>
         </div>
     </div>
@@ -63,54 +63,69 @@
                         <div class="row">
                             <div class="col-md-12">
                                 @if (session('success'))
-                                    <div class="alert alert-success" role="alert">
-                                        {{ session('success') }}
-                                    </div>
+                                <div class="alert alert-success" role="alert">
+                                    {{ session('success') }}
+                                </div>
                                 @endif
                                 @if (session('error'))
-                                    <div class="alert alert-danger" role="alert">
-                                        {{ session('error') }}
-                                    </div>
+                                <div class="alert alert-danger" role="alert">
+                                    {{ session('error') }}
+                                </div>
                                 @endif
                             </div>
                             @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
                             @endif
                             <div class="mb-3">
                                 <label for="simpleinput" class="form-label">Libellé</label>
                                 <input wire:model="name" type="text" id="simpleinput" class="form-control">
                                 @error('name')
-                                    <div class="alert alert-danger" role="alert">
-                                        {{ $message }}
-                                    </div>
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="simpleinput" class="form-label">Objet</label>
+                                <input wire:model="object" type="text" id="simpleinput" class="form-control">
+                                @error('object')
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $message }}
+                                </div>
                                 @enderror
                             </div>
 
                             <div class="col-lg-12 mb-3">
                                 <p class="mb-1 fw-bold text-muted">Catégorie</p>
 
-                                <select wire:model="categorie_id" class="form-control parent">
+                                <select wire:model="category" class="form-control parent">
                                     <option value="">--Choisir--</option>
                                     @foreach ($categories as $cat)
-                                        <option value="{{ $cat->id }}">{{ $cat->label }}</option>
+                                    <option value="{{ $cat->id }}">{{ $cat->label }}</option>
                                     @endforeach
 
                                 </select>
-                                @error('categorie_id')
-                                    <div class="alert alert-danger" role="alert">
-                                        {{ $message }}
-                                    </div>
+                                @error('category')
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $message }}
+                                </div>
                                 @enderror
                             </div>
-                            <div class="mb-3" wire:ignore>
-                                <p class="mb-1 fw-bold text-muted">Date de publication</p>
-                                <input placeholder="jj/mm/aaaa" type="text" id="datepicker" class="form-control">
+                            <div class="mb-3">
+                                <label for="date_creation" class="form-label">Date de publication</label>
+                                <input wire:model="date_creation" type="date" id="date_creation" class="form-control">
+                                @error('date_creation')
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $message }}
+                                </div>
+                                @enderror
 
                             </div>
                             <div class="mb-3">
@@ -124,15 +139,15 @@
                                         <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
                                     </div>
                                 </div>
-                                
+
                             </div>
 
                             <div class="mb-3" wire:ignore>
                                 <label for="description" class="form-label">Description</label>
                                 @error('description')
-                                    <div class="alert alert-danger" role="alert">
-                                        {{ $message }}
-                                    </div>
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $message }}
+                                </div>
                                 @enderror
                                 <div id="description" class="mb-3" style="height: 200px;">
 
@@ -154,88 +169,78 @@
     @include('livewire.chunks.widget-model')
 </div>
 @assets
-    <script src="{{ asset('assets/datepicker.js') }}"></script>
-    <script src=" https://cdn.jsdelivr.net/npm/luxon@3.5.0/build/global/luxon.min.js "></script>
+<script src="{{ asset('assets/datepicker.js') }}"></script>
+<script src=" https://cdn.jsdelivr.net/npm/luxon@3.5.0/build/global/luxon.min.js "></script>
 @endassets
 @include('livewire.chunks.notification')
 @script()
-    <script>
-        document.addEventListener('livewire:initialized', function() {
-            let modalWidget = null;
-            const description = new Quill('#description', {
-                theme: 'snow',
-                modules: {
-                    toolbar: [
-                        [{
-                            font: []
-                        }, {
-                            size: []
-                        }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{
-                            color: []
-                        }, {
-                            background: []
-                        }],
-                        [{
-                            script: 'super'
-                        }, {
-                            script: 'sub'
-                        }],
-                        [{
-                            header: [1, 2, 3, 4, 5, 6]
-                        }, 'blockquote', 'code-block'],
-                        [{
-                            list: 'ordered'
-                        }, {
-                            list: 'bullet'
-                        }, {
-                            indent: '-1'
-                        }, {
-                            indent: '+1'
-                        }],
-                        ['direction', {
-                            align: []
-                        }],
-                        ['link', 'image', 'video'],
-                        ['clean'],
-                    ],
-                },
-            });
-
-            const toolbar = description.getModule('toolbar');
-            toolbar.addHandler('image', function() {
-                modalWidget = "description";
-                $('#bs-example-modal-lg').modal('show'); // Ouvre ton modal Bootstrap ici
-            });
-            description.on('text-change', () => {
-                @this.set('description', description.root.innerHTML, false);
-            });
-            $wire.on('updatePoster', (d) => {
-                if (modalWidget == "description") {
-                    const range = description.getSelection();
-                    console.log(range.index, d[0]);
-                    if (range) {
-                        description.insertEmbed(range.index, 'image', d[0]);
-                    }
-                }
-                modalWidget = null;
-                // Fermer le modal une fois l'image insérée
-                $('#bs-example-modal-lg').modal('hide');
-            });
-            Livewire.on('resetEditors', function() {
-                description.root.innerHTML = '';
-            });
-            var datepicker = new Datepicker('#datepicker', {
-
-                onChange: function(date) {
-                    //console.log(new Date(date).toDateString());
-                    var DateTime = luxon.DateTime;
-                    const dateFormatted = DateTime.fromJSDate(date).toFormat('yyyy-MM-dd');
-                    @this.set('date_creation', dateFormatted, false)
-                },
-
-            });
+<script>
+    document.addEventListener('livewire:initialized', function() {
+        let modalWidget = null;
+        const description = new Quill('#description', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{
+                        font: []
+                    }, {
+                        size: []
+                    }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{
+                        color: []
+                    }, {
+                        background: []
+                    }],
+                    [{
+                        script: 'super'
+                    }, {
+                        script: 'sub'
+                    }],
+                    [{
+                        header: [1, 2, 3, 4, 5, 6]
+                    }, 'blockquote', 'code-block'],
+                    [{
+                        list: 'ordered'
+                    }, {
+                        list: 'bullet'
+                    }, {
+                        indent: '-1'
+                    }, {
+                        indent: '+1'
+                    }],
+                    ['direction', {
+                        align: []
+                    }],
+                    ['link', 'image', 'video'],
+                    ['clean'],
+                ],
+            },
         });
-    </script>
+
+        const toolbar = description.getModule('toolbar');
+        toolbar.addHandler('image', function() {
+            modalWidget = "description";
+            $('#bs-example-modal-lg').modal('show'); // Ouvre ton modal Bootstrap ici
+        });
+        description.on('text-change', () => {
+            @this.set('description', description.root.innerHTML, false);
+        });
+        $wire.on('updatePoster', (d) => {
+            if (modalWidget == "description") {
+                const range = description.getSelection();
+                console.log(range.index, d[0]);
+                if (range) {
+                    description.insertEmbed(range.index, 'image', d[0]);
+                }
+            }
+            modalWidget = null;
+            // Fermer le modal une fois l'image insérée
+            $('#bs-example-modal-lg').modal('hide');
+        });
+        Livewire.on('resetEditors', function() {
+            description.root.innerHTML = '';
+        });
+    });
+</script>
 @endscript

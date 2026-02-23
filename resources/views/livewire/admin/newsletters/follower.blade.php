@@ -24,7 +24,7 @@
                     <div class="row mb-2">
                         @can('create followers')
                             <div class="col-sm-5">
-                                <a href="{{route('newsletters.create-follower')}}" class="btn btn-danger mb-2"><i class="mdi mdi-plus-circle me-2"></i> Ajouter des abonnés</a>
+                                <a href="{{route('newsletters.create-follower')}}" class="btn btn-success mb-2"><i class="mdi mdi-plus-circle me-2"></i> Ajouter des abonnés</a>
                             </div>
                         @endcan
                         <!-- end col-->

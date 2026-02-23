@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('parent')->nullable();
             $table->foreign('parent')->references('id')->on('categories')->nullOnDelete();
             $table->string('label');
-            $table->enum('type', ['FAQ', 'Page', 'Documentation', 'Article', 'Video', 'Event', 'Abonne']);
+            $table->enum('type', ['FAQ', 'Page', 'Documentation', 'Article', 'Video', 'Event', 'Abonne', 'Election']);
             $table->timestamps();
         });
     }

@@ -100,8 +100,10 @@ class EventController extends Controller
                         ->orWhere('event_start', 'like', '%'.$search.'%')
                         ->orWhere('event_end', 'like', '%'.$search.'%');
                 });
-            })->orderBy($orderBy, $direction)
-                ->paginate($perPage, ['*'], 'page', $page);
+            })
+            ->with(['categories', 'image'])
+            ->orderBy($orderBy, $direction)
+            ->paginate($perPage, ['*'], 'page', $page);
 
             return response()->json($events);
         } catch (ValidationException $th) {

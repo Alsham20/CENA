@@ -23,9 +23,17 @@ class Add extends Component
 
     public $avatar_url;
 
+    public $facebook_link;
+
+    public $tweeter_link;
+
+    public $linkedin_link;
+
     public $fonction;
 
     public $is_private = false;
+
+    public $modalWidget;
 
     public function mount()
     {
@@ -42,10 +50,13 @@ class Add extends Component
 
             return;
         }
-        $this->avatar = $media->id;
-        $this->avatar_url = $media->getUrlThumbnail();
-        $this->dispatch('updateAvatar', $this->avatar_url);
-
+        if ($this->modalWidget == null) {
+            $this->avatar = $media->id;
+            $this->avatar_url = $media->getUrlThumbnail();
+            $this->dispatch('updateAvatar', $this->avatar_url);
+        } else {
+            $this->dispatch('updateAvatar', $media->getUrl());
+        }
     }
 
     #[On('setMedia')]
@@ -57,10 +68,13 @@ class Add extends Component
 
             return;
         }
-        $this->avatar = $media->id;
-        $this->avatar_url = $media->getUrlThumbnail();
-        $this->dispatch('updateAvatar', $this->avatar_url);
-
+        if ($this->modalWidget == null) {
+            $this->avatar = $media->id;
+            $this->avatar_url = $media->getUrlThumbnail();
+            $this->dispatch('updateAvatar', $this->avatar_url);
+        } else {
+            $this->dispatch('updateAvatar', $media->getUrl());
+        }
     }
 
     public function store()
@@ -72,6 +86,9 @@ class Add extends Component
             'firstname' => 'required|string',
             'title' => 'required|string',
             'fonction' => 'nullable|string',
+            'facebook_link' => 'nullable|string',
+            'tweeter_link' => 'nullable|string',
+            'linkedin_link' => 'nullable|string',
             'order' => 'required|integer',
             'avatar' => 'required|exists:media,id',
             'is_private' => 'nullable|boolean',
@@ -81,15 +98,15 @@ class Add extends Component
             // $this->author = auth()->user()->id;
 
             $team = Team::create($validated);
-            $this->reset(['lastname', 'firstname', 'title', 'fonction']);
-            $this->dispatch('notification', ['icon' => 'success', 'title' => 'Enregistrement', 'message' => 'Membre d\'équipe créé avec succès.']);
-            AuditService::log("CREATION D'UNE EQUIPE", null, json_encode($team->toArray()), "Creation d'équipe ".$team->title);
+            $this->reset(['lastname', 'firstname', 'title', 'fonction', 'facebook_link', 'tweeter_link', 'linkedin_link']);
+            $this->dispatch('notification', ['icon' => 'success', 'title' => 'Enregistrement', 'message' => 'Membre du conseil créé avec succès.']);
+            AuditService::log("CREATION D'UN MEMBRE", null, json_encode($team->toArray()), "Creation d'un membre " . $team->title);
             DB::commit();
             $this->dispatch('new-team', $team->id);
         } catch (\Throwable $th) {
             DB::rollBack();
             $this->dispatch('notification', ['icon' => 'error', 'title' => 'Erreur', 'message' => 'Une erreur est survenue.']);
-            AuditService::logError("Creation | Erreur lors de l'ajout de l'équipe | ".$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+            AuditService::logError("Creation | Erreur lors de l'ajout de l'équipe | " . $th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
         }
     }
 

@@ -96,12 +96,12 @@ class Edit extends Component
         $media = Media::find($media_id);
         if ($media === null) {
             session()->flash('error', 'Media introuvable');
-
             return;
         }
+
         if($this->modalWidget == null){
             $this->poster = $media->id;
-
+            
             $this->poster_url = $media->getUrlThumbnail();
             $this->dispatch('updatePoster', $this->poster_url);
         }else {
@@ -132,7 +132,6 @@ class Edit extends Component
             $validated['author_id'] = auth()->user()->id;
             $old = Page::find($this->page_id)->toArray();
             $page = Page::updateOrCreate(['id' => $this->page_id], $validated);
-            $page->is_published = false;
             $page->save();
 
             $this->dispatch('notification', ['icon' => 'success', 'title' => 'Page Modifiée', 'message' => 'Page modifiée avec succès.']);

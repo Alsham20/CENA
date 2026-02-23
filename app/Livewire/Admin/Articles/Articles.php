@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Articles;
 
+use App\Models\Activity;
 use App\Models\Article;
 use App\Models\Category;
 use App\Services\AuditService;
@@ -29,6 +30,10 @@ class Articles extends Component
 
     public $categories;
 
+    public $activity = -1;
+
+    public $activities;
+
     public $type;
 
     public $status;
@@ -46,9 +51,9 @@ class Articles extends Component
     public function mount()
     {
         $this->authorize('list articles');
-        $this->categories = Category::where('type', 'article')->get();
+        $this->categories = Category::where('type', 'Article')->get();
+        $this->activities = Activity::where('type', 'Article')->get();
         AuditService::log('AFFICHAGE DES ARTICLES', null, null, 'Liste des articles');
-
     }
 
     #[On('deleteArticle')]
@@ -66,7 +71,7 @@ class Articles extends Component
             $article->is_deleted = true;
             $article->save();
             // ajouter un audit
-            AuditService::log("SUPPRESSION D'UN ARTICLE", null, null, 'Article supprimé : '.$article->title);
+            AuditService::log("SUPPRESSION D'UN ARTICLE", null, null, 'Article supprimé : ' . $article->title);
             DB::commit();
             $this->confirm_delete = null;
             $this->dispatch('article-deleted');
@@ -76,9 +81,8 @@ class Articles extends Component
             DB::rollBack();
             $this->dispatch('error-deleted');
             session()->flash('error', 'Erreur lors de la suppression de l\'article');
-            AuditService::logError('Suppression | Erreur lors de la suppression de l\'article | '.$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+            AuditService::logError('Suppression | Erreur lors de la suppression de l\'article | ' . $th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
         }
-
     }
 
     public function publishArticle($article_id)
@@ -95,14 +99,14 @@ class Articles extends Component
             $article->is_published = true;
             $article->save();
             // ajouter un audit
-            AuditService::log("PUBLICATION D'UN ARTICLE", null, null, 'Article publie : '.$article->title);
+            AuditService::log("PUBLICATION D'UN ARTICLE", null, null, 'Article publie : ' . $article->title);
             DB::commit();
             session()->flash('success', 'Article publie avec succès');
             $this->resetPage();
         } catch (\Throwable $th) {
             DB::rollBack();
             session()->flash('error', 'Erreur lors de la publication de l\'article');
-            AuditService::logError('Publication | Erreur lors de la publication de l\'article | '.$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+            AuditService::logError('Publication | Erreur lors de la publication de l\'article | ' . $th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
         }
     }
 
@@ -120,14 +124,14 @@ class Articles extends Component
             $article->is_archive = true;
             $article->save();
             // ajouter un audit
-            AuditService::log("ARCHIVAGE D'UN ARTICLE", null, null, 'Article archivé : '.$article->title);
+            AuditService::log("ARCHIVAGE D'UN ARTICLE", null, null, 'Article archivé : ' . $article->title);
             DB::commit();
             session()->flash('success', 'Article archivé avec succès');
             $this->resetPage();
         } catch (\Throwable $th) {
             DB::rollBack();
             session()->flash('error', 'Erreur lors de l\'archivage de l\'article');
-            AuditService::logError('Archivage | Erreur lors de l\'archivage de l\'article | '.$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+            AuditService::logError('Archivage | Erreur lors de l\'archivage de l\'article | ' . $th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
         }
     }
 
@@ -145,14 +149,14 @@ class Articles extends Component
             $article->is_published = false;
             $article->save();
             // ajouter un audit
-            AuditService::log("DESACTIVATION D'UN ARTICLE", null, null, 'Article desactive : '.$article->title);
+            AuditService::log("DESACTIVATION D'UN ARTICLE", null, null, 'Article desactive : ' . $article->title);
             DB::commit();
             session()->flash('success', 'Article desactive avec succès');
             $this->resetPage();
         } catch (\Throwable $th) {
             DB::rollBack();
             session()->flash('error', 'Erreur lors de la desactivation de l\'article');
-            AuditService::logError('Desactivation | Erreur lors de la desactivation de l\'article | '.$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+            AuditService::logError('Desactivation | Erreur lors de la desactivation de l\'article | ' . $th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
         }
     }
 
@@ -161,7 +165,7 @@ class Articles extends Component
         if ($this->search == '') {
             $articles = Article::where('is_deleted', false)->where('is_archive', false)->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc');
         } else {
-            $articles = Article::where('is_deleted', false)->where('is_archive', false)->where('title', 'like', '%'.$this->search.'%')->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc');
+            $articles = Article::where('is_deleted', false)->where('is_archive', false)->where('title', 'like', '%' . $this->search . '%')->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc');
         }
 
         if ($this->type != '') {

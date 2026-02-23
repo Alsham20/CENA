@@ -24,7 +24,7 @@
                     <div class="row mb-2">
                         @can('create settings')
                             <div class="col-sm-5">
-                                <a  href="{{route('settings.create')}}" class="btn btn-danger mb-2"><i class="mdi mdi-plus-circle me-2"></i> Ajouter un Paramètre</a>
+                                <a  href="{{route('settings.create')}}" class="btn btn-success mb-2"><i class="mdi mdi-plus-circle me-2"></i> Ajouter un Paramètre</a>
                             </div>
                         @endcan
                         <!-- end col-->

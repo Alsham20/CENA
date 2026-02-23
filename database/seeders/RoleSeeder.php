@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders\Admin;
+namespace Database\Seeders;
 
 use App\Models\Role;
 use Illuminate\Database\Seeder;
@@ -34,6 +34,14 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'unpublish articles']);
         Permission::create(['name' => 'unarchive articles']);
         Permission::create(['name' => 'archive articles']);
+
+        Permission::create(['name' => 'create videos']);
+        Permission::create(['name' => 'view videos']);
+        Permission::create(['name' => 'list videos']);
+        Permission::create(['name' => 'edit videos']);
+        Permission::create(['name' => 'delete videos']);
+        Permission::create(['name' => 'publish videos']);
+        Permission::create(['name' => 'unpublish videos']);
 
         Permission::create(['name' => 'create pages']);
         Permission::create(['name' => 'view pages']);
@@ -107,17 +115,25 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'unpublish events']);
         Permission::create(['name' => 'receive event notifications']);
 
-        Permission::create(['name' => 'list composantes']);
-        Permission::create(['name' => 'edit composantes']);
-        Permission::create(['name' => 'delete composantes']);
-        Permission::create(['name' => 'create composantes']);
-        Permission::create(['name' => 'view composantes']);
+        Permission::create(['name' => 'list elections']);
+        Permission::create(['name' => 'edit elections']);
+        Permission::create(['name' => 'delete elections']);
+        Permission::create(['name' => 'create elections']);
+        Permission::create(['name' => 'view elections']);
+        Permission::create(['name' => 'publish elections']);
+        Permission::create(['name' => 'unpublish elections']);
+        Permission::create(['name' => 'unarchive elections']);
+        Permission::create(['name' => 'archive elections']);
 
-        Permission::create(['name' => 'list activites']);
-        Permission::create(['name' => 'edit activites']);
-        Permission::create(['name' => 'delete activites']);
-        Permission::create(['name' => 'create activites']);
-        Permission::create(['name' => 'view activites']);
+        Permission::create(['name' => 'list resultats']);
+        Permission::create(['name' => 'edit resultats']);
+        Permission::create(['name' => 'delete resultats']);
+        Permission::create(['name' => 'create resultats']);
+        Permission::create(['name' => 'view resultats']);
+        Permission::create(['name' => 'publish resultats']);
+        Permission::create(['name' => 'unpublish resultats']);
+        Permission::create(['name' => 'unarchive resultats']);
+        Permission::create(['name' => 'archive resultats']);
 
         Permission::create(['name' => 'list sites']);
         Permission::create(['name' => 'edit sites']);

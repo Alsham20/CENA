@@ -1,6 +1,6 @@
 <div class="container-fluid">
 
-    
+
     <!-- start page title -->
     <div class="row">
         <div class="col-12">
@@ -27,24 +27,24 @@
                         <div class="row">
                             <div class="col-md-12">
                                 @if (session('success'))
-                                    <div class="alert alert-success" role="alert">
-                                        {{ session('success') }}
-                                    </div>
+                                <div class="alert alert-success" role="alert">
+                                    {{ session('success') }}
+                                </div>
                                 @endif
                                 @if (session('error'))
-                                    <div class="alert alert-danger" role="alert">
-                                        {{ session('error') }}
-                                    </div>
+                                <div class="alert alert-danger" role="alert">
+                                    {{ session('error') }}
+                                </div>
                                 @endif
                             </div>
                             @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
                             @endif
                             <div class="mb-3">
                                 <label for="title" class="form-label">Titre</label>
@@ -60,10 +60,15 @@
                                     <input id="is_featured" wire:model.live="is_featured" value="1" type="checkbox" class="form-check-input" id="checkbox-signin">
                                     <label class="form-check-label" for="is_featured">A la une</label>
                                 </div>
-                            </div> 
+                            </div>
                             <div class="mb-3">
                                 <label for="date_article" class="form-label">Date</label>
-                                <input placeholder="jj/mm/aaaa" type="text" id="datepicker" class="form-control">
+                                <input wire:model="date_article" type="date" id="date_article" class="form-control">
+                                @error('date_article')
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $message }}
+                                </div>
+                                @enderror
 
                             </div>
                             <div class="mb-3">
@@ -99,14 +104,32 @@
                                     <p class="mb-1 fw-bold text-muted">Categorie</p>
 
                                     <select wire:model="category" class="select2 form-control category"
-                                            data-toggle="select2" data-placeholder="Choose ...">
+                                        data-toggle="select2" data-placeholder="Choose ...">
                                         <option></option>
                                         @foreach ($categories as $item)
-                                            <option value="{{$item->id}}">{{$item->label}}</option>
+                                        <option value="{{$item->id}}">{{$item->label}}</option>
                                         @endforeach
 
                                     </select>
                                     @error('category')
+                                    <div class="alert alert-danger" role="alert">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div> <!-- end col -->
+
+                                <div class="col-lg-12 mb-3">
+                                    <p class="mb-1 fw-bold text-muted">Activité</p>
+
+                                    <select wire:model="activity" class="select2 form-control activity"
+                                        data-toggle="select2" data-placeholder="Choose ...">
+                                        <option></option>
+                                        @foreach ($activities as $item)
+                                        <option value="{{$item->id}}">{{$item->label}}</option>
+                                        @endforeach
+
+                                    </select>
+                                    @error('activity')
                                     <div class="alert alert-danger" role="alert">
                                         {{ $message }}
                                     </div>
@@ -120,23 +143,23 @@
                                         <div class="card-body">
                                             <div class="border-dashed border rounded col-3 p-1">
                                                 <img src="#" class="img-thumbnail m-1 poster_thumb"
-                                                     style="cursor: pointer" alt="">
+                                                    style="cursor: pointer" alt="">
                                             </div>
                                         </div> <!-- end card-body -->
                                     </div>
                                     @error('poster') <span class="error">{{ $message }}</span> @enderror
                                     <button type="button" class="btn btn-info" data-bs-toggle="modal"
-                                            data-bs-target="#bs-example-modal-lg">Choisir une image
+                                        data-bs-target="#bs-example-modal-lg">Choisir une image
                                     </button>
                                     <div class="modal fade" id="bs-example-modal-lg" tabindex="-1" role="dialog"
-                                         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                        aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h4 class="modal-title" id="myLargeModalLabel">Choisir une
                                                         image</h4>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-hidden="true"></button>
+                                                        aria-hidden="true"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     @livewire('admin.medias.widget')
@@ -150,11 +173,11 @@
                                 <div class="row">
                                     <div class="col-lg-12 mb-3">
                                         <label for="tags">Tags</label>
-                                        <input class="form-control form-control-solid p-0" id="tags"/>
+                                        <input class="form-control form-control-solid p-0" id="tags" />
                                     </div>
                                     <div class="col-lg-12 mb-3">
                                         <label for="keywords">Keywords</label>
-                                        <input class="form-control form-control-solid p-0" id="keywords"/>
+                                        <input class="form-control form-control-solid p-0" id="keywords" />
                                     </div>
                                     <div class="col-lg-12 mb-3">
                                         <label for="slug_">Slug</label>
@@ -165,7 +188,7 @@
                                     <div class="col-lg-12 mb-3">
                                         <div class="form-floating">
                                             <textarea wire:model="content_description" class="form-control"
-                                                      id="content_description" style="height: 100px;"></textarea>
+                                                id="content_description" style="height: 100px;"></textarea>
                                             <label for="content_description">Description</label>
                                         </div>
                                     </div>
@@ -182,7 +205,7 @@
     </div>
 
     <!-- end row -->
-     @include('livewire.chunks.widget-model')
+    @include('livewire.chunks.widget-model')
 </div>
 @assets
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
@@ -192,24 +215,17 @@
 @include('livewire.chunks.notification')
 @script
 <script>
-    document.addEventListener('livewire:initialized', function () {
+    document.addEventListener('livewire:initialized', function() {
         let modalWidget = null;
 
-        var datepicker = new Datepicker('#datepicker',{
-            
-            onChange: function(date) {
-                //console.log(new Date(date).toDateString());
-                var DateTime = luxon.DateTime;
-                const dateFormatted = DateTime.fromJSDate(date).toFormat('yyyy-MM-dd');
-                @this.set('date_article', dateFormatted, false)
-            },
-            
-        });
+        $('.category').on('change', function() {
 
-        $('.category').on('change', function () {
+            @this.set('category', this.value);
+        })
 
-        @this.set('category', this.value)
-            ;
+        $('.activity').on('change', function() {
+
+            @this.set('activity', this.value);
         })
         // Runs immediately after Livewire has finished initializing
         // on the page...
@@ -217,43 +233,90 @@
             theme: 'snow',
             modules: {
                 toolbar: [
-                    [{font: []}, {size: []}],
+                    [{
+                        font: []
+                    }, {
+                        size: []
+                    }],
                     ['bold', 'italic', 'underline', 'strike'],
-                    [{color: []}, {background: []}],
-                    [{script: 'super'}, {script: 'sub'}],
-                    [{header: [1, 2, 3, 4, 5, 6]}, 'blockquote', 'code-block'],
-                    [{list: 'ordered'}, {list: 'bullet'}, {indent: '-1'}, {indent: '+1'}],
-                    ['direction', {align: []}],
+                    [{
+                        color: []
+                    }, {
+                        background: []
+                    }],
+                    [{
+                        script: 'super'
+                    }, {
+                        script: 'sub'
+                    }],
+                    [{
+                        header: [1, 2, 3, 4, 5, 6]
+                    }, 'blockquote', 'code-block'],
+                    [{
+                        list: 'ordered'
+                    }, {
+                        list: 'bullet'
+                    }, {
+                        indent: '-1'
+                    }, {
+                        indent: '+1'
+                    }],
+                    ['direction', {
+                        align: []
+                    }],
                     ['link', 'image', 'video'],
                     ['clean'],
                 ],
             },
         });
-       
+
         snowEditor.on('text-change', () => {
-        @this.set('content', snowEditor.root.innerHTML, false)
-            ;
+            @this.set('content', snowEditor.root.innerHTML, false);
         });
-        
+
         const toolbar = snowEditor.getModule('toolbar');
         toolbar.addHandler('image', function() {
             modalWidget = "content";
-            @this.set('modalWidget', "content",true);
+            @this.set('modalWidget', "content", true);
             $('#bs-example-modal-lg').modal('show'); // Ouvre ton modal Bootstrap ici
         });
-        
+
 
         const resume = new Quill('#resume', {
             theme: 'snow',
             modules: {
                 toolbar: [
-                    [{font: []}, {size: []}],
+                    [{
+                        font: []
+                    }, {
+                        size: []
+                    }],
                     ['bold', 'italic', 'underline', 'strike'],
-                    [{color: []}, {background: []}],
-                    [{script: 'super'}, {script: 'sub'}],
-                    [{header: [1, 2, 3, 4, 5, 6]}, 'blockquote', 'code-block'],
-                    [{list: 'ordered'}, {list: 'bullet'}, {indent: '-1'}, {indent: '+1'}],
-                    ['direction', {align: []}],
+                    [{
+                        color: []
+                    }, {
+                        background: []
+                    }],
+                    [{
+                        script: 'super'
+                    }, {
+                        script: 'sub'
+                    }],
+                    [{
+                        header: [1, 2, 3, 4, 5, 6]
+                    }, 'blockquote', 'code-block'],
+                    [{
+                        list: 'ordered'
+                    }, {
+                        list: 'bullet'
+                    }, {
+                        indent: '-1'
+                    }, {
+                        indent: '+1'
+                    }],
+                    ['direction', {
+                        align: []
+                    }],
                     ['link', 'image', 'video'],
                     ['clean'],
                 ],
@@ -261,56 +324,55 @@
         });
         const resumeToolbar = resume.getModule('toolbar');
         resumeToolbar.addHandler('image', function() {
-            modalWidget = "resume";  
-            @this.set('modalWidget', "resume",true);
+            modalWidget = "resume";
+            @this.set('modalWidget', "resume", true);
             $('#bs-example-modal-lg').modal('show'); // Ouvre ton modal Bootstrap ici
         });
         resume.on('text-change', () => {
-        @this.set('resume', resume.root.innerHTML, false)
-            ;
+            @this.set('resume', resume.root.innerHTML, false);
         });
         $wire.on('updatePoster', (d) => {
-            
-            if(modalWidget == "content"){
+
+            if (modalWidget == "content") {
 
                 const range = snowEditor.getSelection();
-                console.log(range.index,d[0]);
+                console.log(range.index, d[0]);
                 if (range) {
-                snowEditor.insertEmbed(range.index, 'image', d[0]);
-                } 
-            }else if(modalWidget == "resume"){
+                    snowEditor.insertEmbed(range.index, 'image', d[0]);
+                }
+            } else if (modalWidget == "resume") {
                 const range = resume.getSelection();
-                console.log(range.index,d[0]);
+                console.log(range.index, d[0]);
                 if (range) {
                     resume.insertEmbed(range.index, 'image', d[0]);
                 }
-            }else{
+            } else {
                 $('.poster_thumb').attr('src', d);
                 $('.poster_card').removeClass('d-none');
             }
             modalWidget = null;
-            @this.set('modalWidget', null,true);
+            @this.set('modalWidget', null, true);
             // Fermer le modal une fois l'image insérée
             $('#bs-example-modal-lg').modal('hide');
         });
-        Livewire.on('resetEditors', function () {
+        Livewire.on('resetEditors', function() {
             snowEditor.root.innerHTML = '';
             resume.root.innerHTML = '';
             tag.removeAllTags();
             keytag.removeAllTags();
         });
 
-       
+
 
         var input = document.querySelector("#tags");
         var tag = new Tagify(input, {
             whitelist: [],
             maxTags: 10,
             dropdown: {
-                maxItems: 20,           // <- mixumum allowed rendered suggestions
+                maxItems: 20, // <- mixumum allowed rendered suggestions
                 classname: "", // <- custom classname for this dropdown, so it could be targeted
-                enabled: 0,             // <- show suggestions on focus
-                closeOnSelect: false    // <- do not hide the suggestions dropdown once an item has been selected
+                enabled: 0, // <- show suggestions on focus
+                closeOnSelect: false // <- do not hide the suggestions dropdown once an item has been selected
             },
             callbacks: {
                 change: function(tag) {
@@ -326,10 +388,10 @@
             whitelist: [],
             maxTags: 10,
             dropdown: {
-                maxItems: 20,           // <- mixumum allowed rendered suggestions
+                maxItems: 20, // <- mixumum allowed rendered suggestions
                 classname: "", // <- custom classname for this dropdown, so it could be targeted
-                enabled: 0,             // <- show suggestions on focus
-                closeOnSelect: false    // <- do not hide the suggestions dropdown once an item has been selected
+                enabled: 0, // <- show suggestions on focus
+                closeOnSelect: false // <- do not hide the suggestions dropdown once an item has been selected
             },
             callbacks: {
                 change: function(tag) {

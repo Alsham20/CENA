@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Livewire\Admin\Articles;
 
 use App\Mail\ArticleMail;
+use App\Models\Activity;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\Media;
 use App\Models\User;
 use App\Services\AuditService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -25,6 +27,8 @@ class Edit extends Component
     public $author;
 
     public $category;
+
+    public $activity;
 
     // public $images = [];
     public $poster;
@@ -49,6 +53,8 @@ class Edit extends Component
 
     public $categories = [];
 
+    public $activities = [];
+
     public $date_article;
 
     public $modalWidget;
@@ -64,6 +70,8 @@ class Edit extends Component
         $this->content = $article->content;
         // $this->author = $article->author;
         $this->category = $article->category;
+        $this->activity = $article->activity;
+
         $this->poster = $article->poster;
 
         if ($this->poster !== null) {
@@ -78,8 +86,9 @@ class Edit extends Component
         $this->is_featured = $article->is_featured;
         $this->is_private = $article->is_private;
         $this->article_id = $article->id;
-        $this->date_article = $article->date_article;
-        $this->categories = Category::where('type', 'article')->get();
+        $this->date_article = ($article->date_article) ? Carbon::parse($article->date_article)->format('Y-m-d') : '';;
+        $this->categories = Category::where('type', 'Article')->get();
+        $this->activities = Activity::where('type', 'Article')->get();
     }
 
     #[On('newMedia')]
@@ -91,12 +100,12 @@ class Edit extends Component
 
             return;
         }
-        if($this->modalWidget == null){
+        if ($this->modalWidget == null) {
             $this->poster = $media->id;
 
             $this->poster_url = $media->getUrlThumbnail();
             $this->dispatch('updatePoster', $this->poster_url);
-        }else {
+        } else {
 
             $this->dispatch('updatePoster', $media->getUrl());
         }
@@ -111,12 +120,12 @@ class Edit extends Component
 
             return;
         }
-        if($this->modalWidget == null){
+        if ($this->modalWidget == null) {
             $this->poster = $media->id;
 
             $this->poster_url = $media->getUrlThumbnail();
             $this->dispatch('updatePoster', $this->poster_url);
-        }else {
+        } else {
 
             $this->dispatch('updatePoster', $media->getUrl());
         }
@@ -129,13 +138,14 @@ class Edit extends Component
             'title' => 'required|string',
             'content' => 'required|string',
             'category' => 'required|exists:categories,id',
+            'activity' => 'required|exists:activities,id',
             'poster' => 'required|exists:media,id',
             'resume' => 'nullable',
             'slug_' => 'nullable',
             'content_description' => 'nullable',
             'is_featured' => 'nullable|boolean',
             'is_private' => 'nullable|boolean',
-            'date_article' => 'nullable|date',
+            'date_article' => 'require|date',
         ]);
         try {
             DB::beginTransaction();
@@ -146,11 +156,10 @@ class Edit extends Component
             $validated['content_keywords'] = json_encode($this->content_keywords) ?? json_encode([]);
             $validated['author_id'] = auth()->user()->id;
             $article = Article::updateOrCreate(['id' => $this->article_id], $validated);
-            $article->is_published = false;
             $article->save();
 
             $this->dispatch('notification', ['icon' => 'success', 'title' => 'Article Modifié', 'message' => 'Article modifié avec succès.']);
-            AuditService::log("MODIFICATION D'UN ARTICLE", json_encode($old_values), json_encode($article->toArray()), "Modification d'article ".$article->title);
+            AuditService::log("MODIFICATION D'UN ARTICLE", json_encode($old_values), json_encode($article->toArray()), "Modification d'article " . $article->title);
             DB::commit();
             $userpublisher = User::permission('publish articles')->where('is_active', 1)->get();
 
@@ -163,7 +172,7 @@ class Edit extends Component
             Log::info($th->getMessage());
             DB::rollBack();
             $this->dispatch('notification', ['icon' => 'error', 'title' => 'Erreur', 'message' => 'Une erreur est survenue.']);
-            AuditService::logError("Creation | Erreur lors de la modification de l'article | ".$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+            AuditService::logError("Creation | Erreur lors de la modification de l'article | " . $th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
         }
     }
 

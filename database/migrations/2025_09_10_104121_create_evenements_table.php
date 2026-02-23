@@ -14,8 +14,14 @@ return new class extends Migration
         Schema::create('evenements', function (Blueprint $table) {
             $table->id();
             $table->string('event_name');
+            $table->string('slug');
             $table->string('place')->nullable();
             $table->text('event_description')->nullable();
+            $table->dateTime('event_date')->nullable();
+            $table->unsignedBigInteger('category')->nullable();
+            $table->foreign('category')->references('id')->on('categories')->nullOnDelete();
+            $table->unsignedBigInteger('poster')->nullable();
+            $table->foreign('poster')->references('id')->on('media')->nullOnDelete();
             $table->timestamp('event_start')->nullable();
             $table->timestamp('event_end')->nullable();
             $table->boolean('is_published')->default(false);

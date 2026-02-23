@@ -5,12 +5,12 @@
             <div class="page-title-box">
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Equipe</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('teams.index')}}">Membres</a></li>
                         <li class="breadcrumb-item active">Afficher</li>
                     </ol>
                 </div>
-                <h4 class="page-title">Afficher une équipe</h4>
+                <h4 class="page-title">Afficher un membre</h4>
             </div>
         </div>
     </div>
@@ -24,24 +24,24 @@
                         <div class="row">
                             <div class="col-md-12">
                                 @if (session('success'))
-                                    <div class="alert alert-success" role="alert">
-                                        {{ session('success') }}
-                                    </div>
+                                <div class="alert alert-success" role="alert">
+                                    {{ session('success') }}
+                                </div>
                                 @endif
                                 @if (session('error'))
-                                    <div class="alert alert-danger" role="alert">
-                                        {{ session('error') }}
-                                    </div>
+                                <div class="alert alert-danger" role="alert">
+                                    {{ session('error') }}
+                                </div>
                                 @endif
                             </div>
                             @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
                             @endif
                             <div class="mb-3">
                                 <label for="simpleinput" class="form-label">Nom</label>
@@ -70,6 +70,42 @@
                                 </div>
                                 @enderror
                             </div>
+                            <div class="mb-3">
+                                <label for="simpleinput" class="form-label">Fonction</label>
+                                <input disabled wire:model="fonction" type="text" id="simpleinput" class="form-control">
+                                @error('fonction')
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="facebook_link" class="form-label">Facebook</label>
+                                <input disabled wire:model="facebook_link" type="text" id="facebook_link" class="form-control">
+                                @error('facebook_link')
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="tweeter_link" class="form-label">Tweeter</label>
+                                <input disabled wire:model="tweeter_link" type="text" id="tweeter_link" class="form-control">
+                                @error('tweeter_link')
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="linkedin_link" class="form-label">Linkedin</label>
+                                <input disabled wire:model="linkedin_link" type="text" id="linkedin_link" class="form-control">
+                                @error('linkedin_link')
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
                             <div class="mb-3 mb-3">
                                 <div class="form-check">
                                     <input disabled id="is_private" wire:model.live="is_private" value="1" type="checkbox" class="form-check-input" id="checkbox-signin">
@@ -83,23 +119,23 @@
                                     <div class="card-body">
                                         <div class="border-dashed border-2 border rounded col-3 p-1">
                                             <img src="#" class="img-thumbnail m-1 avatar_thumb"
-                                                 style="cursor: pointer" alt="">
+                                                style="cursor: pointer" alt="">
                                         </div>
                                     </div> <!-- end card-body -->
                                 </div>
                                 @error('avatar') <span class="error">{{ $message }}</span> @enderror
 
                                 <div class="modal fade" id="bs-example-modal-lg" tabindex="-1" role="dialog"
-                                     aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                    aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h4 class="modal-title" id="myLargeModalLabel">Choisir une
                                                     image</h4>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-hidden="true"></button>
+                                                    aria-hidden="true"></button>
                                             </div>
-                                            <div class="modal-body" >
+                                            <div class="modal-body">
                                                 @livewire('admin.medias.widget')
                                             </div>
                                         </div><!-- /.modal-content -->
@@ -122,8 +158,7 @@
 @include('livewire.chunks.notification')
 @script()
 <script>
-
-    document.addEventListener('livewire:initialized', function () {
+    document.addEventListener('livewire:initialized', function() {
         $('.avatar_thumb').attr('src', '{{ $avatar_url }}');
         $('.avatar_card').removeClass('d-none');
         $wire.on('updateAvatar', (d) => {
@@ -131,6 +166,5 @@
             $('.avatar_card').removeClass('d-none');
         });
     });
-
 </script>
 @endscript

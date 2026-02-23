@@ -7,7 +7,7 @@
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{route('documentation.index')}}">Documentation</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('documentation.index')}}">Documents</a></li>
                         <li class="breadcrumb-item active">Liste</li>
                     </ol>
                 </div>
@@ -24,7 +24,7 @@
                     <div class="row mb-2">
                         @can('create documentation')
                             <div class="col-sm-5">
-                                <a href="{{route('documentation.create')}}" class="btn btn-danger mb-2"><i class="mdi mdi-plus-circle me-2"></i> Ajouter une ressource utile</a>
+                                <a href="{{route('documentation.create')}}" class="btn btn-success mb-2"><i class="mdi mdi-plus-circle me-2"></i> Ajouter une ressource utile</a>
                             </div>
                         @endcan
                         <!-- end col-->
@@ -86,14 +86,11 @@
                             <tbody>
                             @foreach ($ressources as $res)
                                 <tr>
-
-
-
                                     <td style="width: 30%;white-space :normal">
                                         {{$res->name}}
                                     </td>
                                     <td style="width: 20%;white-space :normal">
-                                        {{$res->categorie->label}}
+                                        {{$res->categories->label}}
                                     </td>
                                     
                                     <td style="width: 20%;white-space :normal">

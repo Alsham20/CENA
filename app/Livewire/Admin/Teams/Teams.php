@@ -39,7 +39,7 @@ class Teams extends Component
     public function mount()
     {
         $this->authorize('list teams');
-        AuditService::log('AFFICHAGE DES EQUIPES', null, null, 'Liste des membres d\'équipe');
+        AuditService::log('AFFICHAGE DES MEMBRES DU CONSEIL', null, null, 'Liste des membres d\'équipe');
     }
 
     #[On('delete')]
@@ -56,17 +56,17 @@ class Teams extends Component
             }
             $team->delete();
             // ajouter un audit
-            AuditService::log("SUPPRESSION D'UNE EQUIPE", null, null, 'Equipe supprime : '.$team->firstname.' '.$team->lastname);
+            AuditService::log("SUPPRESSION D'UN MEMBRE", null, null, 'Membre supprimé : '.$team->firstname.' '.$team->lastname);
             DB::commit();
             $this->confirm_delete = null;
             $this->dispatch('team-deleted');
-            session()->flash('success', 'Equipe supprimée avec succès');
+            session()->flash('success', 'Membre supprimé avec succès');
             $this->resetPage();
         } catch (\Throwable $th) {
             DB::rollBack();
             $this->dispatch('error-deleted');
-            session()->flash('error', 'Erreur lors de la suppression des ressources');
-            AuditService::logError('Suppression | Erreur lors de la suppression de la ressource | '.$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+            session()->flash('error', 'Erreur lors de la suppression du membre');
+            AuditService::logError('Suppression | Erreur lors de la suppression du membre | '.$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
         }
 
     }

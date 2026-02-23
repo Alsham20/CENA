@@ -1,6 +1,6 @@
 <div class="container-fluid">
-<style>
-        .datepicker{
+    <style>
+        .datepicker {
             display: block;
             width: 100%;
             padding: .45rem .9rem;
@@ -22,12 +22,12 @@
             <div class="page-title-box">
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Documentation</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('documentation.index')}}">Documents</a></li>
                         <li class="breadcrumb-item active">Modifier</li>
                     </ol>
                 </div>
-                <h4 class="page-title">Modifier une ressource</h4>
+                <h4 class="page-title">Modifier un document</h4>
             </div>
         </div>
     </div>
@@ -41,24 +41,24 @@
                         <div class="row">
                             <div class="col-md-12">
                                 @if (session('success'))
-                                    <div class="alert alert-success" role="alert">
-                                        {{ session('success') }}
-                                    </div>
+                                <div class="alert alert-success" role="alert">
+                                    {{ session('success') }}
+                                </div>
                                 @endif
                                 @if (session('error'))
-                                    <div class="alert alert-danger" role="alert">
-                                        {{ session('error') }}
-                                    </div>
+                                <div class="alert alert-danger" role="alert">
+                                    {{ session('error') }}
+                                </div>
                                 @endif
                             </div>
                             @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
                             @endif
                             <div class="mb-3">
                                 <label for="simpleinput" class="form-label">Libellé</label>
@@ -70,26 +70,41 @@
                                 @enderror
                             </div>
 
-                            <div class="col-lg-12 mb-3">
-                                <p class="mb-1 fw-bold text-muted">Catégorie</p>
-
-                                <select wire:model="categorie_id" class="form-control parent" >
-                                    <option value="">--Choisir--</option>
-                                    @foreach($categories as $cat)
-                                        <option value="{{$cat->id}}">{{$cat->label}}</option>
-                                    @endforeach
-
-                                </select>
-                                @error('categorie_id')
+                            <div class="mb-3">
+                                <label for="simpleinput" class="form-label">Objet</label>
+                                <input wire:model="object" type="text" id="simpleinput" class="form-control">
+                                @error('object')
                                 <div class="alert alert-danger" role="alert">
                                     {{ $message }}
                                 </div>
                                 @enderror
                             </div>
 
-                            <div class="mb-3" wire:ignore>
-                                <p class="mb-1 fw-bold text-muted">Date de publication</p>
-                                <input value="{{ \Carbon\Carbon::parse($date_creation)->format('d/m/Y') }}" placeholder="jj/mm/aaaa" type="text" id="datepicker" class="form-control">
+                            <div class="col-lg-12 mb-3">
+                                <p class="mb-1 fw-bold text-muted">Catégorie</p>
+
+                                <select wire:model="category" class="form-control parent">
+                                    <option value="">--Choisir--</option>
+                                    @foreach($categories as $cat)
+                                    <option value="{{$cat->id}}"  @if($category==$cat->id) selected @endif>{{$cat->label}}</option>
+                                    @endforeach
+
+                                </select>
+                                @error('category')
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="date_creation" class="form-label">Date de publication</label>
+                                <input wire:model="date_creation" type="date" id="date_creation" class="form-control">
+                                @error('date_creation')
+                                <div class="alert alert-danger" role="alert">
+                                    {{ $message }}
+                                </div>
+                                @enderror
 
                             </div>
 
@@ -137,20 +152,43 @@
 @include('livewire.chunks.notification')
 @script()
 <script>
-
-    document.addEventListener('livewire:initialized', function () {
+    document.addEventListener('livewire:initialized', function() {
 
         const description = new Quill('#description', {
             theme: 'snow',
             modules: {
                 toolbar: [
-                    [{font: []}, {size: []}],
+                    [{
+                        font: []
+                    }, {
+                        size: []
+                    }],
                     ['bold', 'italic', 'underline', 'strike'],
-                    [{color: []}, {background: []}],
-                    [{script: 'super'}, {script: 'sub'}],
-                    [{header: [1, 2, 3, 4, 5, 6]}, 'blockquote', 'code-block'],
-                    [{list: 'ordered'}, {list: 'bullet'}, {indent: '-1'}, {indent: '+1'}],
-                    ['direction', {align: []}],
+                    [{
+                        color: []
+                    }, {
+                        background: []
+                    }],
+                    [{
+                        script: 'super'
+                    }, {
+                        script: 'sub'
+                    }],
+                    [{
+                        header: [1, 2, 3, 4, 5, 6]
+                    }, 'blockquote', 'code-block'],
+                    [{
+                        list: 'ordered'
+                    }, {
+                        list: 'bullet'
+                    }, {
+                        indent: '-1'
+                    }, {
+                        indent: '+1'
+                    }],
+                    ['direction', {
+                        align: []
+                    }],
                     ['link', 'image', 'video'],
                     ['clean'],
                 ],
@@ -164,14 +202,13 @@
         });
 
         description.on('text-change', () => {
-        @this.set('description', description.getSemanticHTML(), false)
-            ;
+            @this.set('description', description.getSemanticHTML(), false);
         });
 
         $wire.on('updatePoster', (d) => {
-            if(modalWidget == "description"){
+            if (modalWidget == "description") {
                 const range = description.getSelection();
-                console.log(range.index,d[0]);
+                console.log(range.index, d[0]);
                 if (range) {
                     description.insertEmbed(range.index, 'image', d[0]);
                 }
@@ -180,18 +217,6 @@
             // Fermer le modal une fois l'image insérée
             $('#bs-example-modal-lg').modal('hide');
         });
-
-        var datepicker = new Datepicker('#datepicker',{
-
-            onChange: function(date) {
-                //console.log(new Date(date).toDateString());
-                var DateTime = luxon.DateTime;
-                const dateFormatted = DateTime.fromJSDate(date).toFormat('yyyy-MM-dd');
-                @this.set('date_creation', dateFormatted, false)
-            },
-
-        });
     });
-
 </script>
 @endscript

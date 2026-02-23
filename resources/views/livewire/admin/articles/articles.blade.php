@@ -24,30 +24,30 @@
                 <div class="card-body">
                     <div class="row mb-2">
                         @can('create articles')
-                            <div class="col-sm-5">
-                                <a href="{{route('articles.create')}}" class="btn btn-danger mb-2"><i
-                                        class="mdi mdi-plus-circle me-2"></i> Ajouter un article</a>
-                            </div>
+                        <div class="col-sm-5">
+                            <a href="{{route('articles.create')}}" class="btn btn-success mb-2"><i
+                                    class="mdi mdi-plus-circle me-2"></i> Ajouter un article</a>
+                        </div>
                         @endcan
                         <!-- end col-->
                     </div>
                     <div class="row mb-2">
                         @if (session('success'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('success') }}
-                            </div>
+                        <div class="alert alert-success" role="alert">
+                            {{ session('success') }}
+                        </div>
                         @endif
                         @if (session('error'))
-                            <div class="alert alert-danger" role="alert">
-                                {{ session('error') }}
-                            </div>
+                        <div class="alert alert-danger" role="alert">
+                            {{ session('error') }}
+                        </div>
                         @endif
                     </div>
                     <div class="row mb-2">
                         <div class="col-lg-2">
                             <div class="mb-3">
                                 <select wire:model.live="perPage" wire:change="resetPage" class="form-select"
-                                        id="example-select">
+                                    id="example-select">
                                     <option value="5">5</option>
                                     <option value="10">10</option>
                                     <option value="20">20</option>
@@ -56,14 +56,28 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-2">
                             <div class="mb-3" wire:ignore>
                                 <select wire:model.live="category" wire:change="resetPage"
-                                        class="select2 form-control category" data-toggle="select2"
-                                        data-placeholder="Choisir ...">
+                                    class="select2 form-control category" data-toggle="select2"
+                                    data-placeholder="Choisir ...">
                                     <option value="-1">--Catégories--</option>
                                     @foreach ($categories as $item)
-                                        <option value="{{$item->id}}">{{$item->label}}</option>
+                                    <option value="{{$item->id}}">{{$item->label}}</option>
+                                    @endforeach
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <div class="mb-3" wire:ignore>
+                                <select wire:model.live="activity" wire:change="resetPage"
+                                    class="select2 form-control activity" data-toggle="select2"
+                                    data-placeholder="Choisir ...">
+                                    <option value="-1">--Activités--</option>
+                                    @foreach ($activities as $item)
+                                    <option value="{{$item->id}}">{{$item->label}}</option>
                                     @endforeach
 
                                 </select>
@@ -82,22 +96,22 @@
                             </div>
                         </div>--}}
 
-                        <div class="col-lg-2">
+                        <!-- <div class="col-lg-2">
                             <div class="mb-3">
                                 <select wire:model.live="type" wire:change="resetPage" class="form-select"
-                                        id="example-select">
+                                    id="example-select">
                                     <option value="">--Types--</option>
                                     <option value="0">Public</option>
                                     <option value="1">Privé</option>
 
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="col-lg-2">
                             <div class="mb-3">
                                 <select wire:model.live="status" wire:change="resetPage" class="form-select"
-                                        id="example-select">
+                                    id="example-select">
                                     <option value="">--Statut--</option>
                                     <option value="0">Non publié</option>
                                     <option value="1">Publié</option>
@@ -105,10 +119,10 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-3">
+                        <div class="col-lg-4">
                             <div class="input-group float-end">
                                 <input type="text" wire:model.live="search" wire:keyup="resetPage" class="form-control"
-                                       placeholder="Rechercher...">
+                                    placeholder="Rechercher...">
 
                             </div>
                         </div>
@@ -117,31 +131,31 @@
 
                         <table class="table table-centered w-100 dt-responsive nowrap" id="products-datatable">
                             <thead class="table-light">
-                            <tr>
-                                <th class="all">Titre
+                                <tr>
+                                    <th class="all">Titre
 
-                                    <a href="#" wire:click="sortBy('title')">
-                                        <i class="mdi mdi-arrow-up"></i>
-                                        <i class="mdi mdi-arrow-down"></i>
-                                    </a>
-                                </th>
-                                <th>Categorie(s)</th>
-                                <th>Auteur</th>
-                                <th>Statut</th>
-                                <th>Privée</th>
-                                <th>A la une</th>
-                                <th>Date</th>
-                                <th>Date de création
-                                    <a href="#" wire:click="sortBy('created_at')">
-                                        <i class="mdi mdi-arrow-up"></i>
-                                        <i class="mdi mdi-arrow-down"></i>
-                                    </a>
-                                </th>
-                                <th style="width: 150px;">Actions</th>
-                            </tr>
+                                        <a href="#" wire:click="sortBy('title')">
+                                            <i class="mdi mdi-arrow-up"></i>
+                                            <i class="mdi mdi-arrow-down"></i>
+                                        </a>
+                                    </th>
+                                    <th>Categorie(s)</th>
+                                    <!-- <th>Activité(s)</th> -->
+                                    <th>Auteur</th>
+                                    <th>Statut</th>
+                                    <th>Privée</th>
+                                    <th>A la une</th>
+                                    <th>Date de création
+                                        <a href="#" wire:click="sortBy('created_at')">
+                                            <i class="mdi mdi-arrow-up"></i>
+                                            <i class="mdi mdi-arrow-down"></i>
+                                        </a>
+                                    </th>
+                                    <th style="width: 150px;">Actions</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @foreach ($articles as $article)
+                                @foreach ($articles as $article)
                                 <tr>
                                     <td style="width: 30%;white-space :normal">
                                         {{$article->title}}
@@ -149,6 +163,9 @@
                                     <td style="width: 20%;white-space :normal">
                                         {{$article->categories->label}}
                                     </td>
+                                    <!-- <td style="width: 20%;white-space :normal">
+                                        {{$article->activities->label}}
+                                    </td> -->
                                     <td style="width: 20%;white-space :normal">
 
                                         {{$article->author->email}}
@@ -167,60 +184,60 @@
                                         <span
                                             class="badge badge-outline-{{$article->is_featured ? 'success' : 'warning'}}">{{$article->is_featured ? 'Oui' : 'Non'}}</span>
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         {{$article->date_article ? \Carbon\Carbon::parse($article->date_article)->format('d/m/Y H:i') : ""}}
-                                    </td>
+                                    </td> -->
                                     <td>
                                         {{$article->created_at}}
                                     </td>
                                     <td class="table-action p-0">
                                         @can('view articles')
-                                            <a href="{{route('articles.show', $article->id)}}" title="Voir"> <i
-                                                    class="mdi mdi-eye text-info h3"></i></a>
+                                        <a href="{{route('articles.show', $article->id)}}" title="Voir"> <i
+                                                class="mdi mdi-eye text-info h3"></i></a>
                                         @endcan
 
                                         @can('edit articles')
-                                            <a href="{{route('articles.edit', $article->id)}}" title="Modifier"> <i
-                                                    class="mdi mdi-square-edit-outline text-primary h3"></i></a>
+                                        <a href="{{route('articles.edit', $article->id)}}" title="Modifier"> <i
+                                                class="mdi mdi-square-edit-outline text-primary h3"></i></a>
                                         @endcan
 
                                         @can('delete articles')
-                                            <a href="javascript:void(0);"
-                                               wire:click.prevent="$dispatch('confirm-delete',{{$article->id}})"
-                                               title="Supprimer"> <i class="mdi mdi-delete text-danger h3"></i></a>
+                                        <a href="javascript:void(0);"
+                                            wire:click.prevent="$dispatch('confirm-delete',{{$article->id}})"
+                                            title="Supprimer"> <i class="mdi mdi-delete text-danger h3"></i></a>
                                         @endcan
 
                                         @can('archive articles')
                                         <a href="javascript:void(0);"
-                                                   wire:click.prevent="archiveArticle({{$article->id}})" title="Archiver">
-                                                    <i
-                                                        class="mdi mdi-archive text-success h3"></i></a>
+                                            wire:click.prevent="archiveArticle({{$article->id}})" title="Archiver">
+                                            <i
+                                                class="mdi mdi-archive text-success h3"></i></a>
                                         @endcan
 
                                         @if(!$article->is_published)
-                                            @can('publish articles')
-                                                <a href="javascript:void(0);"
-                                                   wire:click.prevent="publishArticle({{$article->id}})" title="Publié">
-                                                    <i
-                                                        class="mdi mdi-bookmark-check text-success h3"></i></a>
-                                            @endcan
+                                        @can('publish articles')
+                                        <a href="javascript:void(0);"
+                                            wire:click.prevent="publishArticle({{$article->id}})" title="Publié">
+                                            <i
+                                                class="mdi mdi-bookmark-check text-success h3"></i></a>
+                                        @endcan
                                         @else
-                                            @can('unpublish articles')
-                                                <a href="javascript:void(0);"
-                                                   wire:click.prevent="unpublishArticle({{$article->id}})"
-                                                   title="Dépublier"> <i
-                                                        class="mdi mdi-bookmark-outline text-warning h3"></i></a>
-                                            @endcan
+                                        @can('unpublish articles')
+                                        <a href="javascript:void(0);"
+                                            wire:click.prevent="unpublishArticle({{$article->id}})"
+                                            title="Dépublier"> <i
+                                                class="mdi mdi-bookmark-outline text-warning h3"></i></a>
+                                        @endcan
                                         @endif
                                     </td>
                                 </tr>
-                            @endforeach
+                                @endforeach
                             </tbody>
                         </table>
                         @if ($articles->count() == 0)
-                            <div class="alert alert-info" role="alert">
-                                Aucune article n'est disponible.
-                            </div>
+                        <div class="alert alert-info" role="alert">
+                            Aucun article n'est disponible.
+                        </div>
                         @endif
                     </div>
                     <div class="row mt-3">
@@ -231,21 +248,21 @@
                         </div>
                         <div class="col-sm-12 col-md-7">
                             <div class="dataTables_paginate paging_simple_numbers float-end"
-                                 id="products-datatable_paginate">
+                                id="products-datatable_paginate">
                                 <nav aria-label="Page navigation example">
                                     <ul class="pagination justify-content-end">
                                         <!-- Bouton Précédent -->
                                         <li class="page-item @if($articles->onFirstPage()) disabled @endif">
                                             <a class="page-link" href="#" wire:click.prevent="previousPage"
-                                               tabindex="-1">Previous</a>
+                                                tabindex="-1">Previous</a>
                                         </li>
 
                                         <!-- Liens vers les pages -->
                                         @foreach ($articles->links()->elements[0] as $page => $url)
-                                            <li class="page-item @if($articles->currentPage() == $page) active @endif">
-                                                <a class="page-link" href="#"
-                                                   wire:click.prevent="gotoPage({{ $page }})">{{ $page }}</a>
-                                            </li>
+                                        <li class="page-item @if($articles->currentPage() == $page) active @endif">
+                                            <a class="page-link" href="#"
+                                                wire:click.prevent="gotoPage({{ $page }})">{{ $page }}</a>
+                                        </li>
                                         @endforeach
 
                                         <!-- Bouton Suivant -->
@@ -271,12 +288,12 @@
                         <i class="ri-close-circle-line h1"></i>
                         {{$confirm_delete}}
                         @if($confirm_delete)
-                            <h4 class="mt-2">Attention!</h4>
-                            <p class="mt-3">Voulez-vous supprimer cet article ? Cette action est irreversible</p>
-                            <button type="button" class="btn btn-light my-2" data-bs-dismiss="modal">Annuler</button>
-                            <button type="button" class="btn btn-warning my-2"
-                                    wire:click="deleteArticle({{$confirm_delete}})">Confirmer
-                            </button>
+                        <h4 class="mt-2">Attention!</h4>
+                        <p class="mt-3">Voulez-vous supprimer cet article ? Cette action est irreversible</p>
+                        <button type="button" class="btn btn-light my-2" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-warning my-2"
+                            wire:click="deleteArticle({{$confirm_delete}})">Confirmer
+                        </button>
                         @endif
                     </div>
                 </div>
@@ -289,17 +306,14 @@
 @endassets
 @script
 <script>
+    document.addEventListener('livewire:initialized', function() {
+        $('.category').select2({
+            placeholder: '--Catégories-',
+            allowClear: true
+        });
 
-    document.addEventListener('livewire:initialized', function () {
-        $('.category').select2(
-            {
-                placeholder: '--Catégories-',
-                allowClear: true
-            });
-
-        $('.category').on('change', function () {
-        @this.set('category', this.value)
-            ;
+        $('.category').on('change', function() {
+            @this.set('category', this.value);
         })
     });
 
@@ -317,7 +331,9 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 //Livewire.emit('deleteArticle', id);
-                Livewire.dispatch('deleteArticle', {article_id: id});
+                Livewire.dispatch('deleteArticle', {
+                    article_id: id
+                });
                 /*Swal.fire(
                     'Supprimé!',
                     'L\'article a été supprimé.',

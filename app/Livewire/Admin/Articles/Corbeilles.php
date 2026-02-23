@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Articles;
 
+use App\Models\Activity;
 use App\Models\Article;
 use App\Models\Category;
 use App\Services\AuditService;
@@ -29,6 +30,10 @@ class Corbeilles extends Component
 
     public $categories;
 
+    public $activity = -1;
+
+    public $activities;
+
     public $type;
 
     public $status;
@@ -46,9 +51,9 @@ class Corbeilles extends Component
     public function mount()
     {
         $this->authorize('list corbeille');
-        $this->categories = Category::where('type', 'article')->get();
+        $this->categories = Category::where('type', 'Article')->get();
+        $this->activities = Activity::where('type', 'Article')->get();
         AuditService::log('AFFICHAGE DES ARTICLES DE LA CORBEILLE', null, null, 'Liste des articles de la corbeille');
-
     }
 
     #[On('deleteArticle')]
@@ -65,7 +70,7 @@ class Corbeilles extends Component
             }
             $article->delete();
             // ajouter un audit
-            AuditService::log("SUPPRESSION D'UN ARTICLE", null, null, 'Article supprimé : '.$article->title);
+            AuditService::log("SUPPRESSION D'UN ARTICLE", null, null, 'Article supprimé : ' . $article->title);
             DB::commit();
             $this->confirm_delete = null;
             $this->dispatch('article-deleted');
@@ -75,9 +80,8 @@ class Corbeilles extends Component
             DB::rollBack();
             $this->dispatch('error-deleted');
             session()->flash('error', 'Erreur lors de la suppression de l\'article');
-            AuditService::logError('Suppression | Erreur lors de la suppression de l\'article | '.$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+            AuditService::logError('Suppression | Erreur lors de la suppression de l\'article | ' . $th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
         }
-
     }
 
     public function restoreArticle($article_id)
@@ -94,14 +98,14 @@ class Corbeilles extends Component
             $article->is_deleted = false;
             $article->save();
             // ajouter un audit
-            AuditService::log("RESTAURATION D'UN ARTICLE", null, null, 'Article restauré : '.$article->title);
+            AuditService::log("RESTAURATION D'UN ARTICLE", null, null, 'Article restauré : ' . $article->title);
             DB::commit();
             session()->flash('success', 'Article restauré avec succès');
             $this->resetPage();
         } catch (\Throwable $th) {
             DB::rollBack();
             session()->flash('error', 'Erreur lors de la restauration de l\'article');
-            AuditService::logError('Publication | Erreur lors de la restauration de l\'article | '.$th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
+            AuditService::logError('Publication | Erreur lors de la restauration de l\'article | ' . $th->getMessage(), $th->getTraceAsString(), auth()->user()->email);
         }
     }
 
@@ -110,7 +114,7 @@ class Corbeilles extends Component
         if ($this->search == '') {
             $articles = Article::where('is_deleted', true)->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc');
         } else {
-            $articles = Article::where('is_deleted', true)->where('title', 'like', '%'.$this->search.'%')->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc');
+            $articles = Article::where('is_deleted', true)->where('title', 'like', '%' . $this->search . '%')->orderBy($this->orderBy, $this->orderAsc ? 'asc' : 'desc');
         }
 
         if ($this->type != '') {

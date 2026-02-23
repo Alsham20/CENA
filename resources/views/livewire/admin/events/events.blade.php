@@ -23,10 +23,10 @@
                 <div class="card-body">
                     <div class="row mb-2">
                         @can('create events')
-                            <div class="col-sm-5">
-                                <a href="{{route('events.create')}}" class="btn btn-danger mb-2"><i
-                                        class="mdi mdi-plus-circle me-2"></i> Ajouter un évènement</a>
-                            </div>
+                        <div class="col-sm-5">
+                            <a href="{{route('events.create')}}" class="btn btn-success mb-2"><i
+                                    class="mdi mdi-plus-circle me-2"></i> Ajouter un évènement</a>
+                        </div>
                         @endcan
                         <!-- end col-->
                     </div>
@@ -35,7 +35,7 @@
                         <div class="col-lg-2">
                             <div class="mb-3">
                                 <select wire:model.live="perPage" wire:change="resetPage" class="form-select"
-                                        id="example-select">
+                                    id="example-select">
                                     <option value="5">5</option>
                                     <option value="10">10</option>
                                     <option value="20">20</option>
@@ -44,7 +44,19 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-3"></div>
+                        <div class="col-lg-3">
+                            <div class="mb-3" wire:ignore>
+                                <select wire:model.live="category" wire:change="resetPage"
+                                    class="select2 form-control category" data-toggle="select2"
+                                    data-placeholder="Choisir ...">
+                                    <option value="-1">--Catégories--</option>
+                                    @foreach ($categories as $item)
+                                    <option value="{{$item->id}}">{{$item->label}}</option>
+                                    @endforeach
+
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="col-lg-2">
 
@@ -52,7 +64,7 @@
                         <div class="col-lg-2">
                             <div class="mb-3">
                                 <select wire:model.live="status" wire:change="resetPage" class="form-select"
-                                        id="example-select">
+                                    id="example-select">
                                     <option value="">--Statut--</option>
                                     <option value="1">Publiée</option>
                                     <option value="0">Non publiée</option>
@@ -63,52 +75,56 @@
                         <div class="col-lg-3">
                             <div class="input-group float-end">
                                 <input type="text" wire:model.live="search" wire:keyup="resetPage" class="form-control"
-                                       placeholder="Rechercher...">
+                                    placeholder="Rechercher...">
 
                             </div>
                         </div>
                     </div>
                     <div class="table-responsive">
                         @if (session('status'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('status') }}
-                            </div>
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
                         @endif
                         <table class="table table-centered w-100 dt-responsive nowrap" id="products-datatable">
                             <thead class="table-light">
-                            <tr>
+                                <tr>
 
-                                <th class="all">Evènement</th>
-                                <th>Lieu</th>
-                                <th>Status</th>
-                                <th>Date début</th>
-                                <th>Date Fin</th>
-                                <th>Date de création</th>
-                                <th style="width: 85px;">Action(s)</th>
-                            </tr>
+                                    <th class="all">Evènement</th>
+                                    <th>Lieu</th>
+                                    <th>Categorie(s)</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <!-- <th>Date Fin</th> -->
+                                    <th>Date de création</th>
+                                    <th style="width: 85px;">Action(s)</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @foreach ($events as $event)
+                                @foreach ($events as $event)
                                 <tr>
 
 
-                                    <td>
+                                    <td style="width: 30%;white-space :normal">
                                         {{$event->event_name}}
                                     </td>
                                     <td style="width: 20%;white-space :normal">
                                         {{$event->place}}
+                                    </td>
+                                    <td style="width: 20%;white-space :normal">
+                                        {{$event->categories->label}}
                                     </td>
                                     <td>
                                         <span
                                             class="badge badge-outline-{{$event->is_published ? 'success' : 'warning'}}">{{$event->is_published ? 'Publié' : 'Non publié'}}</span>
                                     </td>
                                     <td style="width: 20%;white-space :normal">
-                                        {{ ($event->event_start) ? \Carbon\Carbon::parse($event->event_start)->format('d/m/Y H:i') : ""}}
+                                        {{ ($event->event_date) ? \Carbon\Carbon::parse($event->event_date)->format('d/m/Y') : ""}}
                                     </td>
 
-                                    <td style="width: 20%;white-space :normal">
+                                    <!-- <td style="width: 20%;white-space :normal">
                                         {{ ($event->event_end) ? \Carbon\Carbon::parse($event->event_end)->format('d/m/Y H:i') : ""}}
-                                    </td>
+                                    </td> -->
 
                                     <td>
                                         {{$event->created_at}}
@@ -117,47 +133,47 @@
 
                                     <td class="table-action">
                                         @can('view events')
-                                            <a href="{{route('events.show', $event->id)}}"> <i
-                                                    class="mdi mdi-eye text-info h3"></i></a>
+                                        <a href="{{route('events.show', $event->id)}}"> <i
+                                                class="mdi mdi-eye text-info h3"></i></a>
 
                                         @endcan
                                         @can('edit events')
-                                            <a href="{{route('events.edit', $event->id)}}"> <i
-                                                    class="mdi mdi-square-edit-outline text-primary h3"></i></a>
+                                        <a href="{{route('events.edit', $event->id)}}"> <i
+                                                class="mdi mdi-square-edit-outline text-primary h3"></i></a>
 
                                         @endcan
                                         @can('delete events')
-                                            <a href="javascript:void(0);"
-                                               wire:click.prevent="$dispatch('confirm-delete',{{$event->id}})"> <i
-                                                    class="mdi mdi-delete text-danger h3"></i></a>
+                                        <a href="javascript:void(0);"
+                                            wire:click.prevent="$dispatch('confirm-delete',{{$event->id}})"> <i
+                                                class="mdi mdi-delete text-danger h3"></i></a>
 
                                         @endcan
 
                                         @if(!$event->is_published)
-                                            @can('publish events')
-                                                <a href="javascript:void(0);"
-                                                   wire:click.prevent="publishEvent({{$event->id}})" title="Publié"> <i
-                                                        class="mdi mdi-bookmark-check text-success h3"></i></a>
-                                            @endcan
+                                        @can('publish events')
+                                        <a href="javascript:void(0);"
+                                            wire:click.prevent="publishEvent({{$event->id}})" title="Publié"> <i
+                                                class="mdi mdi-bookmark-check text-success h3"></i></a>
+                                        @endcan
                                         @else
-                                            @can('unpublish events')
-                                                <a href="javascript:void(0);"
-                                                   wire:click.prevent="unpublishEvent({{$event->id}})"
-                                                   title="Dépublier"> <i
-                                                        class="mdi mdi-bookmark-outline text-warning h3"></i></a>
-                                            @endcan
+                                        @can('unpublish events')
+                                        <a href="javascript:void(0);"
+                                            wire:click.prevent="unpublishEvent({{$event->id}})"
+                                            title="Dépublier"> <i
+                                                class="mdi mdi-bookmark-outline text-warning h3"></i></a>
+                                        @endcan
                                         @endif
                                     </td>
                                 </tr>
-                            @endforeach
+                                @endforeach
 
 
                             </tbody>
                         </table>
                         @if ($events->count() == 0)
-                            <div class="alert alert-info" role="alert">
-                                Aucun évènement n'est disponible.
-                            </div>
+                        <div class="alert alert-info" role="alert">
+                            Aucun évènement n'est disponible.
+                        </div>
                         @endif
                     </div>
                     <div class="row mt-3">
@@ -168,21 +184,21 @@
                         </div>
                         <div class="col-sm-12 col-md-7">
                             <div class="dataTables_paginate paging_simple_numbers float-end"
-                                 id="products-datatable_paginate">
+                                id="products-datatable_paginate">
                                 <nav aria-label="Page navigation example">
                                     <ul class="pagination justify-content-end">
                                         <!-- Bouton Précédent -->
                                         <li class="page-item @if($events->onFirstPage()) disabled @endif">
                                             <a class="page-link" href="#" wire:click.prevent="previousPage"
-                                               tabindex="-1">Previous</a>
+                                                tabindex="-1">Previous</a>
                                         </li>
 
                                         <!-- Liens vers les pages -->
                                         @foreach ($events->links()->elements[0] as $page => $url)
-                                            <li class="page-item @if($events->currentPage() == $page) active @endif">
-                                                <a class="page-link" href="#"
-                                                   wire:click.prevent="gotoPage({{ $page }})">{{ $page }}</a>
-                                            </li>
+                                        <li class="page-item @if($events->currentPage() == $page) active @endif">
+                                            <a class="page-link" href="#"
+                                                wire:click.prevent="gotoPage({{ $page }})">{{ $page }}</a>
+                                        </li>
                                         @endforeach
 
                                         <!-- Bouton Suivant -->
@@ -207,12 +223,12 @@
                     <div class="text-center">
                         <i class="ri-close-circle-line h1"></i>
                         @if($confirm_delete)
-                            <h4 class="mt-2">Attention!</h4>
-                            <p class="mt-3">Voulez-vous supprimer cet évènement? Cette action est irreversible</p>
-                            <button type="button" class="btn btn-light my-2" data-bs-dismiss="modal">Annuler</button>
-                            <button type="button" class="btn btn-warning my-2" wire:click="delete({{$confirm_delete}})">
-                                Confirmer
-                            </button>
+                        <h4 class="mt-2">Attention!</h4>
+                        <p class="mt-3">Voulez-vous supprimer cet évènement? Cette action est irreversible</p>
+                        <button type="button" class="btn btn-light my-2" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-warning my-2" wire:click="delete({{$confirm_delete}})">
+                            Confirmer
+                        </button>
                         @endif
                     </div>
                 </div>
@@ -227,7 +243,19 @@
 @endassets
 @script
 <script>
+        document.addEventListener('livewire:initialized', function () {
+        $('.category').select2(
+            {
+                placeholder: '--Catégories-',
+                allowClear: true
+            });
 
+        $('.category').on('change', function () {
+        @this.set('category', this.value)
+            ;
+        })
+    });
+    
     Livewire.on('confirm-delete', id => {
         Swal.fire({
             title: 'Êtes-vous sûr?',
@@ -241,7 +269,9 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 //Livewire.emit('deleteArticle', id);
-                Livewire.dispatch('delete', {id: id});
+                Livewire.dispatch('delete', {
+                    id: id
+                });
                 /*Swal.fire(
                     'Supprimé!',
                     'La composante a été supprimée.',

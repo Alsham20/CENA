@@ -36,7 +36,7 @@
             @csrf
             @if (session('otp_token'))
             <div class="mb-3">
-                Veuillez entrer le code OTP envoyé {{ config('otp_channel') == 'email' ? 'à votre adresse email' : 'à votre numero de telephone' }}
+                Veuillez entrer le code OTP envoyé {{ config('otp_channel') == 'email' ? 'à votre adresse email' : 'à votre adresse email' }}
             </div>
             <div class="mb-3">
                 <input name="otp_token" type="hidden" value="{{session('otp_token')}}">
