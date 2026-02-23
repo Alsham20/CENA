@@ -11,8 +11,6 @@ const handleRead = (event: TEvent) => {
 const eventStore = useEventStore()
 const events = computed(() => eventStore.events)
 
-
-
 onMounted(() => {
   eventStore.listEvents({
     page: 1,
